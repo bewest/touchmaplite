@@ -1,4 +1,4 @@
-function touchHandler(event)
+touchMapfunction touchHandler(event)
 {
 //	event.preventDefault()
     var touches = event.changedTouches,
@@ -45,8 +45,8 @@ function touchHandler(event)
 		if (event.preventDefault) event.preventDefault();
     } else {
     
-		if(event.scale>1) viewerBean.zoom(1);
-		if(event.scale<1) viewerBean.zoom(-1);
+		if(event.scale>1) touchMap.viewerBean.zoom(1);
+		if(event.scale<1) touchMap.viewerBean.zoom(-1);
 
 		if (event.preventDefault) event.preventDefault();
 		
