@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>touchMapLite</title>
+ 		<meta http-equiv="imagetoolbar" content="no" />
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="robots" content="NOINDEX,NOFOLLOW" />
+		<meta name="author" content="dFacts Network" />
+		<meta name="copyright" content="2009 dFacts Network, released under Apache License, Version 2.0" />
+		<meta name="MSSmartTagsPreventParsing" content="true" />
+		<link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+		<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+		<link rel="apple-touch-icon" href="images/osm_logo.png"/>
+ 		<link rel="stylesheet" type="text/css" href="css/viewer.css" />
+ 		<link media="only screen and (max-device-width: 480px)" href="css/iphone.css" type= "text/css" rel="stylesheet">
+		<script type="text/javascript" src="js/PanoJS/EventUtils.js"></script>
+		<script type="text/javascript" src="js/PanoJS/PanoJS.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.WMS.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.OSM.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.GMap.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.permalink.OSM.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.geolocation.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.marker.js"></script>
+		<script type="text/javascript">
+// <![CDATA[
+
+
+var touchMap = null;
+
+var maximized = false;
+
+EventUtils.addEventListener(window, 'load', function(){
+	touchMap = new touchMapLite("viewer");
+	touchMap.init();
+}, false);
+
+EventUtils.addEventListener(window, 'resize', function(){
+	touchMap.reinitializeGraphic();
+}, false);
+
+
+PanoJS.switchTilesHandler = function(e) {
+	touchMap.switchSource(this.getAttribute('rel'));
+	return false;
+};
+
+
+PanoJS.placeMarkerHandler = function(e) {
+	touchMap.placeMarkerHandler();
+	return false;
+}
+
+PanoJS.permaLinkHandler = function(e) {
+	touchMap.permaLinkHandler();
+	return false;
+};
+
+PanoJS.findLocationHandler = function(e) {
+	findOnMap = touchMap;
+	touchMap.findLocationHandler();
+	return false;
+};
+
+
+
+// ]]>
+		</script>
+	</head>
+	<body>
+		<div id="viewer">
+			<div class="well"><!-- --></div>
+			<div class="surface" id="touchArea"><!-- --></div>
+			<div class="marker" id="markers"></div> 
+			<p class="controls">
+				<span class="zoomIn" title="Zoom In">+</span>
+				<span class="zoomOut" title="Zoom Out">-</span>
+				<br />
+				<span class="findLocation" title="Find Current Location">GPS</span>
+				<br />
+				<span class="switchTiles" title="OpenStreetMap" rel="OSM">OSM</span>
+				<span class="switchTiles" title="ÖPNV Karte" rel="OEPN">ÖPN</span>
+				<span class="switchTiles" title="OpenStreetBrowser" rel="OSB">OSB</span>
+				<span class="switchTiles" title="OpenCycleMap" rel="OSMcylce">RAD</span>
+				<br />
+				<span class="switchTiles" title="Google Satellite Images" rel="GSat">SAT</span>
+				<span class="switchTiles" title="Google Maps Images" rel="GMap">MAP</span>
+				<span class="switchTiles" title="Google Topo Images" rel="GTopo">TOPO</span>
+				<br />
+				<span class="permaLink" title="permalink">Permalink</span> 
+				<span class="placeMarker" title="mark current position">Mark</span> 
+			</p>
+		</div>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.touch.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.wheel.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.dblclick.js"></script>
+	</body>
+</html>
