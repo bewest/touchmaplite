@@ -30,17 +30,17 @@
 	this.tileSources = {};
 	this.viewerId = domID;
 	this.viewerBean = null;
-	this.tileSources = {'OSM': 			new this.TileUrlProviderOSM('http://a.tile.openstreetmap.org','','png'),
-						'OSMcylce': 	new this.TileUrlProviderOSM('http://a.andy.sandbox.cloudmade.com/tiles/cycle','','png'),
-						'OEPN': 			new this.TileUrlProviderOSM('http://tile.öpnvkarte.de/tilegen','','png'),
-						'OSB': 			new this.TileUrlProviderOSM('http://www.openstreetbrowser.org/tiles/base','','png'),
-						'GMap': 		new this.TileUrlProviderGMap('http://mt0.google.com','vt/'),
-						'GSat': 		new this.TileUrlProviderGMap('http://khm2.google.com','kh/v=43&'),
-						'GTopo': 		new this.TileUrlProviderGMap('http://mt2.google.com','vt/v=w2p.106&'),
-						'GeobasisBB': 	new this.TileUrlProviderWMS('http://isk.geobasis-bb.de/ows/dnm.php?','bg,siedlung,vegetation,gewaesser,transport,strassennamen,ortsnamen,gewaessernamen','','image/png',false),
-						'GaiaMV': 		new this.TileUrlProviderWMS('http://www.gaia-mv.de/dienste/gdimv_dtk?','gdimv_dtk','','image/png',true),
-						'NASA':			new this.TileUrlProviderWMS('http://wms.jpl.nasa.gov/wms.cgi?','modis,global_mosaic',',','image/jpeg',true),
-						'metacarta':	new this.TileUrlProviderWMS('http://labs.metacarta.com/wms/vmap0?','basic','','image/jpeg')
+	this.tileSources = {'OSM': 			{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://a.tile.openstreetmap.org','','png')},
+						'OSMcylce': 	{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://a.andy.sandbox.cloudmade.com/tiles/cycle','','png')},
+						'OEPN': 		{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://tile.öpnvkarte.de/tilegen','','png')},
+						'OSB': 			{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://www.openstreetbrowser.org/tiles/base','','png')},
+						'GMap': 		{'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://mt0.google.com','vt/')},
+						'GSat': 		{'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://khm2.google.com','kh/v=43&')},
+						'GTopo': 		{'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://mt2.google.com','vt/v=w2p.106&')},
+						'GeobasisBB': 	{'copyright':'Data (C) by Landesvermessung und Geobasisinformation Brandenburg','provider':new this.TileUrlProviderWMS('http://isk.geobasis-bb.de/ows/dnm.php?','bg,siedlung,vegetation,gewaesser,transport,strassennamen,ortsnamen,gewaessernamen','','image/png',false)},
+						'GaiaMV': 		{'copyright':'Data (C) by Geodateninfrastruktur Mecklenburg-Vorpommern (GDI-MV)','provider':new this.TileUrlProviderWMS('http://www.gaia-mv.de/dienste/gdimv_dtk?','gdimv_dtk','','image/png',true)},
+						'NASA':			{'copyright':'Data (C) by NASA','provider':new this.TileUrlProviderWMS('http://wms.jpl.nasa.gov/wms.cgi?','modis,global_mosaic',',','image/jpeg',true)},
+						'metacarta':	{'copyright':'Data (C) by metacarta','provider':new this.TileUrlProviderWMS('http://labs.metacarta.com/wms/vmap0?','basic','','image/jpeg')}
 	};
 
 }
@@ -55,9 +55,16 @@ touchMapLite.prototype = {
 	switchSource: function(tileSet){
 		if(tileSet && typeof(this.tileSources[tileSet]) != 'undefined'){
 			this.map = tileSet;
-			this.viewerBean.tileUrlProvider = this.tileSources[tileSet];
+			this.viewerBean.tileUrlProvider = this.tileSources[tileSet]['provider'];
+			this.setCopyrightNotice(this.tileSources[this.map]['copyright']);
 			this.viewerBean.clear();
 			this.viewerBean.prepareTiles();
+		}
+	},
+	setCopyrightNotice: function(text){
+		container = document.getElementById('copyright');
+		if(container){
+			container.innerHTML=text;
 		}
 	},
 	initializePanoJS: function(e) {
@@ -77,7 +84,8 @@ touchMapLite.prototype = {
 				loadingTile: 'images/blank.gif',
 				initialPan:	{ 'x' : this.lon2pan(this.lon), 'y' : this.lat2pan(this.lat)}
 			});
-			this.viewerBean.tileUrlProvider = this.tileSources[this.map];
+			this.viewerBean.tileUrlProvider = this.tileSources[this.map]['provider'];
+			this.setCopyrightNotice(this.tileSources[this.map]['copyright']);
 			this.viewerBean.fitToWindow(0);
 			this.viewerBean.init();
 		
