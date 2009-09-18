@@ -5,6 +5,7 @@ body {
 	color: #fff;
 	background: #dddddd;
 	font-size: 0.7em;
+	overflow: hidden;
 }
 #viewer {
 	background: #dddddd url(../images/loading.gif) center no-repeat;
@@ -123,4 +124,12 @@ body {
 	-moz-border-radius: 8px;
 	padding: 1em;
 
+}
+
+#viewer .copyright {
+	position: absolute;
+	bottom:0em;
+	left:1em;
+	z-index:999;
+	color: #000;
 }
