@@ -1,4 +1,4 @@
-touchMapfunction touchHandler(event)
+touchHandler = function(event)
 {
 //	event.preventDefault()
     var touches = event.changedTouches,
@@ -29,7 +29,7 @@ touchMapfunction touchHandler(event)
 				}
 			}
 		}
-		
+
 		var simulatedEvent = document.createEvent('MouseEvent');
 		simulatedEvent.initMouseEvent(type, true, true, window, 1, 
 								  first.screenX, first.screenY, 
