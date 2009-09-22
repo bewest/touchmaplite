@@ -1,3 +1,7 @@
+/*
+ *	code fragments from http://rossboucher.com/2008/08/19/iphone-touch-events-in-javascript/
+ */
+
 touchHandler = function(event)
 {
 //	event.preventDefault()
