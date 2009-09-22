@@ -1,3 +1,8 @@
+﻿/*	
+ *	code found at http://adomas.org/javascript-mouse-wheel/
+ */
+
+
 function wheelHandler(event){
 	var delta = 0;
 
