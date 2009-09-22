@@ -1,3 +1,8 @@
+/*	markers used under the terms of the Creative Commons Attribution licence
+ *	http://www.mapito.net/map-marker-icons.html
+ */
+
+
 touchMapLite.prototype.MARKERS = [];
 
 
