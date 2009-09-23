@@ -30,8 +30,8 @@
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.marker.js"></script>
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.SQLite.js"></script>
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.SQLite.ini.js"></script>
-<!--		<script type="text/javascript" src="js/touchMapLite/touchMapLite.SQLite.markers.js"></script> -->
-<!--		<script type="text/javascript" src="js/touchMapLite/touchMapLite.SQLite.tiles.js"></script> -->
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.SQLite.markers.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.SQLite.tiles.js"></script> 
 		<script type="text/javascript">
 // <![CDATA[
 
@@ -44,19 +44,40 @@ var maximized = false;
 
 function updateIni(e) {
 	current = touchMap.currentLonLat(touchMap.viewerBean);
-	touchMap.ini.update('lat',current.y);
-	touchMap.ini.update('lon',current.x);
-	touchMap.ini.update('zoom',touchMap.viewerBean.zoomLevel);
-	touchMap.ini.update('map',touchMap.map);
+	touchMap.sqlIni.update('lat',current.y);
+	touchMap.sqlIni.update('lon',current.x);
+	touchMap.sqlIni.update('zoom',touchMap.viewerBean.zoomLevel);
+	touchMap.sqlIni.update('map',touchMap.map);
 }
 
 
 EventUtils.addEventListener(window, 'load', function(){
+	// init viewer
 	touchMap = new touchMapLite("viewer");
 	touchMap.init();
+
+	// init sqlite
 	touchMap.sql = new touchMap.SQLite('touchMap','1.0','touchMap Database',20000);
-	touchMap.ini = new touchMap.SQLite.ini(touchMap.sql.db, touchMap);
+
+	// ini setting from sqlite
+	touchMap.sqlIni = new touchMap.SQLite.ini(touchMap.sql.db, touchMap);
 	setInterval('updateIni();', 1000);
+
+	// tiles from sqlite cache
+	
+	touchMap.tileSources = {'OSM': 		{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new touchMap.SQLite.tiles(touchMap.sql.db,touchMap,'OSM','http://b.tile.openstreetmap.org/{Z}/{X}/{Y}.png',/.*\/([0-9]+)\/([0-9]+)\/([0-9]+)\.[a-z]{3}/)},
+							'GMap': 	{'copyright':'Data (C) by Google','provider':new touchMap.SQLite.tiles(touchMap.sql.db,touchMap,'GMap','http://mt0.google.com/vt/x={X}&y={Y}&z={Z}',/.*x=([0-9]+)&y=([0-9]+)&z=([0-9]+)/)},
+							'GSat': 	{'copyright':'Data (C) by Google','provider':new touchMap.SQLite.tiles(touchMap.sql.db,touchMap,'GSat','http://khm2.google.com/kh/v=43&x={X}&y={Y}&z={Z}',/.*x=([0-9]+)&y=([0-9]+)&z=([0-9]+)/)},
+							'GTopo': 	{'copyright':'Data (C) by Google','provider':new touchMap.SQLite.tiles(touchMap.sql.db,touchMap,'GTopo','http://mt2.google.com/vt/v=w2p.106&x={X}&y={Y}&z={Z}',/.*x=([0-9]+)&y=([0-9]+)&z=([0-9]+)/)}
+	};
+	touchMap.switchSource('OSM');
+
+	
+	// markers from sqlite
+	touchMap.sqlMakers = new touchMap.SQLite.markers(touchMap.sql.db, touchMap);
+
+
+
 
 }, false);
 
@@ -73,6 +94,10 @@ PanoJS.switchTilesHandler = function(e) {
 
 PanoJS.placeMarkerHandler = function(e) {
 	touchMap.placeMarkerHandler();
+	coords = touchMap.currentLonLat(touchMap.viewerBean);
+	id = 'GPS';
+	marker = new touchMap.marker(id,coords.y, coords.x,touchMap,true);
+	touchMap.sqlMakers.updateMarker(id, coords.y, coords.x,  id);
 	return false;
 }
 
@@ -104,9 +129,6 @@ PanoJS.findLocationHandler = function(e) {
 				<span class="findLocation" title="Find Current Location">GPS</span>
 				<br />
 				<span class="switchTiles" title="OpenStreetMap" rel="OSM">OSM</span>
-				<span class="switchTiles" title="ÖPNV Karte" rel="OEPN">ÖPN</span>
-				<span class="switchTiles" title="OpenStreetBrowser" rel="OSB">OSB</span>
-				<span class="switchTiles" title="OpenCycleMap" rel="OSMcylce">RAD</span>
 				<br />
 				<span class="switchTiles" title="Google Satellite Images" rel="GSat">SAT</span>
 				<span class="switchTiles" title="Google Maps Images" rel="GMap">MAP</span>
