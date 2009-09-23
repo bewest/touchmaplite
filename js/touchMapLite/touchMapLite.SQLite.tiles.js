@@ -47,11 +47,6 @@ touchMapLite.prototype.SQLite.tiles.prototype = {
 		tileSQL.timestamp = 0;
 		tileSQL.data = data;
         
-		if(image){
-        	image.src =  tileSQL.data; // this.provider + z + '/' + x + '/' + y + '.' + this.extension;
-			image.relativeSrc = image.src;
-		}
-
         this.db.transaction(function (tx) 
         {
             tx.executeSql("INSERT INTO tiles (provider, x, y, z, timestamp, data) VALUES (?, ?, ?, ?, ?, ?)", [tileSQL.provider, tileSQL.x, tileSQL.y, tileSQL.z, tileSQL.timestamp, tileSQL.data]);
@@ -134,8 +129,6 @@ touchMapLite.prototype.SQLite.tiles.prototype = {
 		var tile = this.regex;
   		if(tile.test(src)){
 			tile.exec(src);
-	  		image.src = src;
-	  		image.relativeSrc = src;	
 	  		this.fetchTileFromCache(image,RegExp.$1,RegExp.$2,RegExp.$3,src);
 	  	} else {
 	  		image.src = src;
