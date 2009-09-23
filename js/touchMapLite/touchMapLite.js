@@ -48,9 +48,10 @@
 }
 
 touchMapLite.prototype = {
-	init: function(){
+	init: function(initDefault){
+		if(typeof initDefault == 'undefined') initDefault = false;
 		if(typeof this.getPermaFormUrlParams != 'undefined') this.getPermaFormUrlParams();
-		this.initializePanoJS();
+		this.initializePanoJS(initDefault);
 		if(typeof this.getMarkersFormUrlParams != 'undefined') this.getMarkersFormUrlParams();
 
 	},
@@ -69,17 +70,17 @@ touchMapLite.prototype = {
 			container.innerHTML=text;
 		}
 	},
-	initializePanoJS: function(e) {
+	initializePanoJS: function(initDefault) {
 		PanoJS.TILE_PREFIX = '';
 		PanoJS.MSG_BEYOND_MIN_ZOOM = '';
 		PanoJS.MSG_BEYOND_MAX_ZOOM = '';
 		PanoJS.USE_SLIDE = false;
 		if (this.viewerBean == null) {
 			this.viewerBean = new PanoJS(this.viewerId, {
-				tileBaseUri: 'http://a.tile.openstreetmap.org',
+				tileBaseUri: '',
 				tileSize: 256,
-				tilePrefix: '',
-				tileExtension: 'png',
+				tilePrefix: '../images/',
+				tileExtension: 'gif',
 				maxZoom: 18,
 				initialZoom: this.zoom,
 				blankTile: 'images/blank.gif',
@@ -87,8 +88,10 @@ touchMapLite.prototype = {
 				initialPan:	{ 'x' : this.lon2pan(this.lon), 'y' : this.lat2pan(this.lat)}
 			});
 			this.viewerBean.touchMap = this;
-			this.viewerBean.tileUrlProvider = this.tileSources[this.map]['provider'];
-			this.setCopyrightNotice(this.tileSources[this.map]['copyright']);
+			if(initDefault){
+				this.viewerBean.tileUrlProvider = this.tileSources[this.map]['provider'];
+				this.setCopyrightNotice(this.tileSources[this.map]['copyright']);
+			}
 			this.viewerBean.fitToWindow(0);
 			this.viewerBean.init();
 		
