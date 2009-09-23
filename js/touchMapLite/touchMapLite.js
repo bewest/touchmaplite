@@ -30,10 +30,12 @@
 	this.tileSources = {};
 	this.viewerId = domID;
 	this.viewerBean = null;
+
 	this.tileSources = {'OSM': 			{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://a.tile.openstreetmap.org','','png')},
 						'OSMcylce': 	{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://a.andy.sandbox.cloudmade.com/tiles/cycle','','png')},
 						'OEPN': 		{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://tile.öpnvkarte.de/tilegen','','png')},
 						'OSB': 			{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://www.openstreetbrowser.org/tiles/base','','png')},
+						// legal? http://code.google.com/p/gmaps-api-issues/issues/detail?id=1396
 						'GMap': 		{'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://mt0.google.com','vt/')},
 						'GSat': 		{'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://khm2.google.com','kh/v=43&')},
 						'GTopo': 		{'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://mt2.google.com','vt/v=w2p.106&')},
@@ -84,6 +86,7 @@ touchMapLite.prototype = {
 				loadingTile: 'images/blank.gif',
 				initialPan:	{ 'x' : this.lon2pan(this.lon), 'y' : this.lat2pan(this.lat)}
 			});
+			this.viewerBean.touchMap = this;
 			this.viewerBean.tileUrlProvider = this.tileSources[this.map]['provider'];
 			this.setCopyrightNotice(this.tileSources[this.map]['copyright']);
 			this.viewerBean.fitToWindow(0);

@@ -31,9 +31,11 @@ touchMapLite.prototype.getMarkersFormUrlParams = function(){
 
 touchMapLite.prototype.marker = function(title, lat, lon, map, live) {
 	if(live){
+		this.id = 0;
 		found = false;
+		if(typeof map.MARKERS == 'undefined') map.MARKERS = [];
 		for(var id=0; id<map.MARKERS.length; id++){
-			if(map.MARKERS[id].title == title){
+			if(map.MARKERS[id].title == title && map.MARKERS[id].element){
 				document.getElementById('markers').removeChild(map.MARKERS[id].element);
 				map.MARKERS[id] = this;
 				this.id = id;
@@ -49,49 +51,21 @@ touchMapLite.prototype.marker = function(title, lat, lon, map, live) {
 		this.id = map.MARKERS.length;
 		map.MARKERS[this.id] = this;
 	}
-
-
 	this.lon = lon;
 	this.lat = lat;
-	this.index = map.marker.index++;
 	this.x = 0;
 	this.y = 0;	
 	this.initialized = false;
 	this.map = map;
 	this.viewer = map.viewerBean;
-	
-	var marker = this;
-	
+	var marker = this;	
 	this.viewer.addViewerMovedListener(marker);
 	this.viewer.addViewerZoomedListener(marker);
 	this.title = title;
 	this.isVisible = false;
 	this.markerSrc = "images/markers/lightblue"+map.MARKERS.length+".png";
 	
-	this.element = document.createElement("div");
-	this.element.setAttribute("class","marker");
-	var image = document.createElement("img");
-	image.src=this.markerSrc;
-	document.getElementById('markers').appendChild(this.element)
-	this.element.appendChild(image)
-	
-	this.element.marker = this;
-	
-	this.element.onclick = function(event){
-		this.marker.hideBubbles();
-		var bubble = document.createElement("div");
-		this.appendChild(bubble);
-
-		bubble.innerHTML = "#"+this.marker.id+": "+this.marker.title+"<br />"+this.marker.lat+",<br />"+this.marker.lon;
-		bubble.setAttribute("class","bubble");
-		bubble.onmouseup = function(e){
-			this.parentNode.marker.hideBubbles();
-			return false;
-		}
-		return false;
-	}
-
-
+	this.createDOMelement();
 	this.placeMarker();
 	this.updateMarker(this.viewer);
 
@@ -105,7 +79,29 @@ touchMapLite.prototype.marker.prototype = {
 		this.y = Math.floor(this.map.lat2pan(this.lat)*fullSize);
 
 	},
+	createDOMelement: function(){
+		this.element = document.createElement("div");
+		this.element.setAttribute("class","marker");
+		var image = document.createElement("img");
+		image.src=this.markerSrc;
+		document.getElementById('markers').appendChild(this.element)
+		this.element.appendChild(image)
+	
+		this.element.marker = this;
+		this.element.onclick = function(event){
+			this.marker.hideBubbles();
+			var bubble = document.createElement("div");
+			this.appendChild(bubble);
 
+			bubble.innerHTML = "#"+this.marker.id+": "+this.marker.title+"<br />"+this.marker.lat+",<br />"+this.marker.lon;
+			bubble.setAttribute("class","bubble");
+			bubble.onmouseup = function(e){
+				this.parentNode.marker.hideBubbles();
+				return false;
+			}
+			return false;
+		}
+	},
 	updateMarker: function(e){	
 		top = (e.y+this.y);
 		left = (e.x+this.x);

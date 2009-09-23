@@ -4,7 +4,6 @@ touchMapLite.prototype.SQLite = function(dbname, version, comment, size){
 	this.version = version;
 	this.comment = comment;
 	this.size = size;
-	
 	this.init();
 }
 
