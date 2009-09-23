@@ -69,9 +69,9 @@ touchMapLite.prototype.SQLite.tiles.prototype = {
 		tileSQL.tiles = this;
 		tileSQL.image = image;
 		
-/* proxy method
+// proxy method
 
-		getreq('http://proxy/base64/?'+src, function(request){
+/*		getreq('http://geo.dmachine.de/proxy/base64/?'+src, function(request){
 			if (request.readyState != 4){ return; }
 			tileSQL.tiles.writeTileToCache(tileSQL.x,tileSQL.y,tileSQL.z,request.responseText,image);
 		});
@@ -107,7 +107,7 @@ touchMapLite.prototype.SQLite.tiles.prototype = {
 		tileSQL.tiles = this;
 
 		if(this.db){ //  && document.getElementById('cache') && document.getElementById('cache').checked
-	        this.db.transaction(function (tx) 
+	       this.db.transaction(function (tx) 
     	    {
 				tx.executeSql("SELECT data FROM tiles WHERE provider = ? AND x = ? AND y = ? AND z = ?", [tileSQL.provider, tileSQL.x, tileSQL.y, tileSQL.z], function(tx, result) {
 					if(!result.rows.length){
@@ -156,3 +156,25 @@ touchMapLite.prototype.SQLite.tiles.prototype = {
 	}
 
 }
+
+/*
+ function createXMLHttpRequest() {
+   try { return new XMLHttpRequest(); } catch(e) {}
+   try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e) {}
+   try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch (e) {}
+   alert("XMLHttpRequest not supported");
+   return null;
+ }
+
+function getreq ( url, callback )
+{
+	var req = createXMLHttpRequest();
+	if ( !req ) {
+		alert( "Error initializing XMLHttpRequest!" );
+		return;
+	}
+	req.open( "GET", url, true );
+	req.onreadystatechange = function () { callback( req ) };
+	req.send( null );
+}
+*/
