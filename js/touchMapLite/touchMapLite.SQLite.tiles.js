@@ -97,14 +97,14 @@ touchMapLite.prototype.SQLite.tiles.prototype = {
     	    {
 				tx.executeSql("SELECT data FROM tiles WHERE provider = ? AND x = ? AND y = ? AND z = ?", [tileObject.provider, tileObject.x, tileObject.y, tileObject.z], function(tx, result) {
 					if(!result.rows.length){
-		    	    	tileObject.image.style.border = 'dotted 1px red';
+//		    	    	tileObject.image.style.border = 'dotted 1px red';
 						tileObject.tiles.populateCache(tileObject);
 					} else {
-		    	    	tileObject.image.style.border = 'dotted 1px blue';
+//						tileObject.image.style.border = 'dotted 1px blue';
 						tileObject.image.src = result.rows.item(0).data;
 					}
 				}, function(tx, error) {
-	    	    	tileObject.image.style.border = 'dotted 1px red';
+//	    	    	tileObject.image.style.border = 'dotted 1px red';
 					tileObject.tiles.populateCache(tileObject);
 				});
 
