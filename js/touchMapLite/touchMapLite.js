@@ -48,10 +48,11 @@
 }
 
 touchMapLite.prototype = {
-	init: function(initDefault){
-		if(typeof initDefault == 'undefined') initDefault = false;
+	init: function(initDefault, fitToWindow){
+		if(initDefault != false) initDefault = true;
+		if(fitToWindow != false) fitToWindow = true;
 		if(typeof this.getPermaFormUrlParams != 'undefined') this.getPermaFormUrlParams();
-		this.initializePanoJS(initDefault);
+		this.initializePanoJS(initDefault, fitToWindow);
 		if(typeof this.getMarkersFormUrlParams != 'undefined') this.getMarkersFormUrlParams();
 
 	},
@@ -70,7 +71,7 @@ touchMapLite.prototype = {
 			container.innerHTML=text;
 		}
 	},
-	initializePanoJS: function(initDefault) {
+	initializePanoJS: function(initDefault, fitToWindow) {
 		PanoJS.TILE_PREFIX = '';
 		PanoJS.MSG_BEYOND_MIN_ZOOM = '';
 		PanoJS.MSG_BEYOND_MAX_ZOOM = '';
@@ -92,7 +93,7 @@ touchMapLite.prototype = {
 				this.viewerBean.tileUrlProvider = this.tileSources[this.map]['provider'];
 				this.setCopyrightNotice(this.tileSources[this.map]['copyright']);
 			}
-			this.viewerBean.fitToWindow(0);
+			if(fitToWindow) this.viewerBean.fitToWindow(0);
 			this.viewerBean.init();
 		
 		}
