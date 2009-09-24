@@ -63,7 +63,8 @@
 		
 			// tiles from sqlite cache
 			
-			touchMap.tileSources = {'OSM': 		{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new touchMap.SQLite.tiles(touchMap.sql.db,touchMap,'OSM','http://b.tile.openstreetmap.org/{Z}/{X}/{Y}.png',/.*\/([0-9]+)\/([0-9]+)\/([0-9]+)\.[a-z]{3}/)},
+			touchMap.tileSources = {'OSM': 		{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new touchMap.SQLite.tiles(touchMap.sql.db,touchMap,'OSM','http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',/.*\/([0-9]+)\/([0-9]+)\/([0-9]+)\.[a-z]{3}/)},
+									'OSMA': 		{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new touchMap.SQLite.tiles(touchMap.sql.db,touchMap,'OSMA','http://tah.openstreetmap.org/Tiles/tile/{Z}/{X}/{Y}.png',/.*\/([0-9]+)\/([0-9]+)\/([0-9]+)\.[a-z]{3}/)},
 									'GMap': 	{'copyright':'Data (C) by Google','provider':new touchMap.SQLite.tiles(touchMap.sql.db,touchMap,'GMap','http://mt0.google.com/vt/x={X}&y={Y}&z={Z}',/.*x=([0-9]+)&y=([0-9]+)&z=([0-9]+)/)},
 									'GSat': 	{'copyright':'Data (C) by Google','provider':new touchMap.SQLite.tiles(touchMap.sql.db,touchMap,'GSat','http://khm2.google.com/kh/v=43&x={X}&y={Y}&z={Z}',/.*x=([0-9]+)&y=([0-9]+)&z=([0-9]+)/,'image/jpeg')},
 									'GTopo': 	{'copyright':'Data (C) by Google','provider':new touchMap.SQLite.tiles(touchMap.sql.db,touchMap,'GTopo','http://mt2.google.com/vt/v=w2p.106&x={X}&y={Y}&z={Z}',/.*x=([0-9]+)&y=([0-9]+)&z=([0-9]+)/)}
@@ -126,7 +127,7 @@
         <h1 id="pageTitle"></h1>
         <a id="backButton" class="button" href="#"></a>
     </div>    
-    <ul id="home" title="Map" selected="true">
+    <ul id="home" selected="true">
     <div id="viewer">
 			<div class="well"><!-- --></div>
 			<div class="surface" id="touchArea"><!-- --></div>
@@ -143,7 +144,10 @@
         <h2>Sources</h2>
         <fieldset>
             <div class="row">
-                <a class="dir" href="#home" onclick="touchMap.switchSource('OSM')">OSM</a>
+                <a class="dir" href="#home" onclick="touchMap.switchSource('OSM')">OpenStreetMap (mapnik)</a>
+            </div>
+            <div class="row">
+                <a class="dir" href="#home" onclick="touchMap.switchSource('OSMA')">OpenStreetMap (osma)</a>
             </div>
             <div class="row">
                 <a class="dir" href="#home" onclick="touchMap.switchSource('GSat')">Google Satellite</a>
