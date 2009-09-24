@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>touchMapLite - multiple instances</title>
+ 		<meta http-equiv="imagetoolbar" content="no" />
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="robots" content="NOINDEX,NOFOLLOW" />
+		<meta name="author" content="dFacts Network" />
+		<meta name="copyright" content="2009 dFacts Network, released under Apache License, Version 2.0" />
+		<meta name="MSSmartTagsPreventParsing" content="true" />
+		<link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+		<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+		<link rel="apple-touch-icon" href="images/osm_logo.png"/>
+ 		<link rel="stylesheet" type="text/css" href="css/viewer.css" />
+ 		<link media="only screen and (max-device-width: 480px)" href="css/iphone.css" type= "text/css" rel="stylesheet">
+ 		<style>
+ 		
+ 		html,  body { margin:0; padding:0; width: 100%; height: 100%}
+
+body {
+	font-family: sans-serif;
+	color: #fff;
+	background: #dddddd;
+	font-size: 0.7em;
+	overflow: hidden;
+}
+#viewerA {
+	background: #dddddd url(../images/loading.gif) center no-repeat;
+	width: 100%;
+	height: 100%;
+	position: relative;
+	top: 0;
+	left: 0;
+}
+#viewerA .well, #viewerA .surface {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	/* FIXME: let's apply this in GSV.js */
+	/*cursor: grab;*/
+	cursor: -moz-grab;
+	_cursor: url(../gfx/grab.cur);
+}
+#viewerA .surface {
+	z-index: 20;
+	_background: url(../gfx/blank.gif) no-repeat center center; /* NOTE: required for IE to"see" the surface */
+}
+#viewerA .well {
+	overflow: hidden;
+	z-index: 10;
+}
+#viewerA .well .tile
+{
+	border: 0;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: block;
+	/*-moz-outline: 1px dashed #FF0000;*/
+}
+#viewerA .controls        
+{
+	position: absolute;
+	/* NOTE: the right and bottom can be adjusted when initialized */
+	right: 1em;
+	top: 3em;;
+	width: auto;
+	height: auto;
+	vertical-align: middle;
+	z-index: 2000;
+}
+
+#viewerA .controls span {
+	background: #fff;
+	background:	rgba(255,255,255,0.4);
+	border: solid 2px #999;
+	border: solid 2px rgba(0,0,0,0.3);
+	color: #000000;
+	text-decoration: none;
+	-moz-outline: none;
+	cursor: pointer;
+	display: block;
+	margin: 0 0 0.3em 0;
+	padding: 0.2em;
+	font-size: 1.3em;
+	line-height: 1.3em;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	text-align: center;
+}
+
+
+#viewerA .controls span.zoomIn {
+	font-size: 2em;
+	line-height: 1em;
+	padding: 0 0.2em 0.2em;
+}
+
+#viewerA .controls span.zoomOut {
+	font-size: 3em;
+	line-height: .7em;
+	padding: 0 0.2em 0.1em;
+}
+
+#viewerA #markers .marker {
+	cursor: pointer;
+	position: absolute; 
+	z-Index:999; 
+	display: block;
+}
+
+#viewerA #markers .marker img {
+	position: absolute;
+	top: -20px;
+	width: 17px;
+	height: 19px;
+	display: block;
+}
+
+#viewerA #markers .bubble {
+	cursor: pointer;
+	position: absolute;
+	top: -3em;
+	height: 3em;
+	width: 9em;
+	left: -4.5em;
+	z-Index:1000; 
+	display: block;
+	background: #fff;
+	background:	rgba(255,255,255,0.8);
+	border: solid 2px #999;
+	border: solid 2px rgba(0,0,0,0.5);
+	color: #000000;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	padding: 1em;
+
+}
+
+#viewerA .copyright {
+	position: absolute;
+	bottom:0em;
+	left:1em;
+	z-index:999;
+	color: #000;
+}
+ 		
+ 		</style>
+		<script type="text/javascript" src="js/PanoJS/EventUtils.js"></script>
+		<script type="text/javascript" src="js/PanoJS/PanoJS.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.WMS.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.OSM.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.GMap.js"></script>
+		<script type="text/javascript">
+// <![CDATA[
+
+
+var touchMap = null;
+var touchMapA = null;
+
+var maximized = false;
+
+EventUtils.addEventListener(window, 'load', function(){
+	touchMap = new touchMapLite("viewer");
+	touchMap.init(true, false);
+	touchMapA = new touchMapLite("viewerA");
+	touchMapA.init(true, false);
+}, false);
+
+EventUtils.addEventListener(window, 'resize', function(){
+	touchMap.reinitializeGraphic();
+	touchMapA.reinitializeGraphic();
+}, false);
+
+
+PanoJS.switchTilesHandler = function(e) {
+	target = this.parentNode.parentNode.backingBean.touchMap;
+	target.switchSource(this.getAttribute('rel'));
+	return false;
+};
+
+
+
+
+
+// ]]>
+		</script>
+	</head>
+	<body>
+		<div id="viewer" style="width: 300px; height: 300px;">
+			<div class="well"><!-- --></div>
+			<div class="surface" id="touchArea"><!-- --></div>
+			<div class="marker" id="markers"></div> 
+			<p class="controls">
+				<span class="zoomIn" title="Zoom In">+</span>
+				<span class="zoomOut" title="Zoom Out">-</span>
+				<br />
+				<span class="switchTiles" title="OpenStreetMap" rel="OSM">OSM</span>
+				<span class="switchTiles" title="Google Satellite Images" rel="GSat">SAT</span>
+			</p>
+			<p class="copyright">touchMapLite, <span id='copyright'></span></p>
+		</div>
+		<div id="viewerA" style="width: 300px; height: 300px;">
+			<div class="well"><!-- --></div>
+			<div class="surface" id="touchArea"><!-- --></div>
+			<div class="marker" id="markers"></div> 
+			<p class="controls">
+				<span class="zoomIn" title="Zoom In">+</span>
+				<span class="zoomOut" title="Zoom Out">-</span>
+				<br />
+				<span class="switchTiles" title="OpenStreetMap" rel="OSM">OSM</span>
+				<span class="switchTiles" title="Google Satellite Images" rel="GSat">SAT</span>
+			</p>
+			<p class="copyright">touchMapLite, <span id='copyright'></span></p>
+		</div>
+		
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.touch.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.wheel.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.dblclick.js"></script>
+	</body>
+</html>
