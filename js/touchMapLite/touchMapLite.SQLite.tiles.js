@@ -1,12 +1,14 @@
 touchMapLite.tileSources = {};
 
-touchMapLite.prototype.SQLite.tiles = function(db,map,id, url,regex) {
+touchMapLite.prototype.SQLite.tiles = function(db,map,id, url,regex, mimetype) {
 	this.db = db;
 	this.map = map;
 	this.url = url;
 	this.regex = regex;
 	this.id = id;
+	if(mimetype){this.mimetype = mimetype;} else {this.mimetype = 'image/png';}
 	this.init();
+	
 }
 
 
@@ -36,103 +38,88 @@ touchMapLite.prototype.SQLite.tiles.prototype = {
 
 	},
 
-    writeTileToCache: function(x,y,z,data,image)
+    writeTileToCache: function(tileObject)
     {
-		var tileSQL = new Object;
 
-		tileSQL.provider = this.id;
-		tileSQL.x = x;
-		tileSQL.y = y;
-		tileSQL.z = z
-		tileSQL.timestamp = 0;
-		tileSQL.data = data;
-        
+		tileObject.timestamp = 0;
         this.db.transaction(function (tx) 
         {
-            tx.executeSql("INSERT INTO tiles (provider, x, y, z, timestamp, data) VALUES (?, ?, ?, ?, ?, ?)", [tileSQL.provider, tileSQL.x, tileSQL.y, tileSQL.z, tileSQL.timestamp, tileSQL.data]);
+            tx.executeSql("INSERT INTO tiles (provider, x, y, z, timestamp, data) VALUES (?, ?, ?, ?, ?, ?)", [tileObject.provider, tileObject.x, tileObject.y, tileObject.z, tileObject.timestamp, tileObject.data], function(result) { 
+            		tileObject = false;
+				});
         }); 
         
     },
-    populateCache: function(image,z,x,y,src)
+    populateCache: function(tileObject)
     {
-		
-		var tileSQL = new Object;
-		
-		tileSQL.x = x;
-		tileSQL.y = y;
-		tileSQL.z = z;
-		tileSQL.tiles = this;
-		tileSQL.image = image;
 		
 // proxy method
 
-/*		getreq('http://geo.dmachine.de/proxy/base64/?'+src, function(request){
+/*		getreq('http://proxy/base64/?'+tileObject.src, function(request){
 			if (request.readyState != 4){ return; }
-			tileSQL.tiles.writeTileToCache(tileSQL.x,tileSQL.y,tileSQL.z,request.responseText,image);
+			tileObject.data = request.responseText
+			tileObject.tiles.writeTileToCache(tileObject);
 		});
 */
 		// using canvas toDataURL method to generate base64 string
-		image.src=src;
-		image.onload = function(){
-			data = tileSQL.tiles.getBase64Image(tileSQL.image);
-			tileSQL.tiles.writeTileToCache(tileSQL.x,tileSQL.y,tileSQL.z, data, tileSQL.image);
+		tileObject.image.src=tileObject.src;
+		tileObject.image.onload = function(){
+			tileObject.data = tileObject.tiles.getBase64Image(tileObject.image, tileObject.tiles.mimetype);
+			tileObject.tiles.writeTileToCache(tileObject);
 		}
     },
     // from http://stackoverflow.com/questions/934012/get-image-data-in-javascript
-    getBase64Image: function (img) {
-		var canvas = document.createElement("canvas");
+    getBase64Image: function (img,mimetype) {
+		canvas = document.createElement("canvas");
 		canvas.width = img.width;
 		canvas.height = img.height;
-		var ctx = canvas.getContext("2d");
+		ctx = canvas.getContext("2d");
 		ctx.drawImage(img, 0, 0);
-		return canvas.toDataURL("image/png");
+		return canvas.toDataURL(mimetype,'quality=20');
 		
 	},
     
     fetchTileFromCache: function(image,z,x,y,src)
     {
-		var tileSQL = new Object;
+
+		var tileObject = new Object;
 		
-		tileSQL.image = image;
-		tileSQL.provider = this.id;
-		tileSQL.x = x;
-		tileSQL.y = y;
-		tileSQL.z = z;
-		tileSQL.src = src;
-		tileSQL.tiles = this;
+		tileObject.image = image;
+		tileObject.provider = this.id;
+		tileObject.x = x;
+		tileObject.y = y;
+		tileObject.z = z;
+		tileObject.src = src;
+		tileObject.tiles = this;
 
 		if(this.db){ //  && document.getElementById('cache') && document.getElementById('cache').checked
 	       this.db.transaction(function (tx) 
     	    {
-				tx.executeSql("SELECT data FROM tiles WHERE provider = ? AND x = ? AND y = ? AND z = ?", [tileSQL.provider, tileSQL.x, tileSQL.y, tileSQL.z], function(tx, result) {
+				tx.executeSql("SELECT data FROM tiles WHERE provider = ? AND x = ? AND y = ? AND z = ?", [tileObject.provider, tileObject.x, tileObject.y, tileObject.z], function(tx, result) {
 					if(!result.rows.length){
-						tileSQL.tiles.populateCache(image,tileSQL.z,tileSQL.x,tileSQL.y,tileSQL.src);
+		    	    	tileObject.image.style.border = 'dotted 1px red';
+						tileObject.tiles.populateCache(tileObject);
 					} else {
-						 for (var i = 0; i < result.rows.length; ++i) {
-							var row = result.rows.item(i);
-							image.src = row.data;
-							image.relativeSrc = image.src;  
-						 }
+		    	    	tileObject.image.style.border = 'dotted 1px blue';
+						tileObject.image.src = result.rows.item(0).data;
 					}
 				}, function(tx, error) {
-					tileSQL.tiles.populateCache(image,tileSQL.z,tileSQL.x,tileSQL.y,tileSQL.src);
+	    	    	tileObject.image.style.border = 'dotted 1px red';
+					tileObject.tiles.populateCache(tileObject);
 				});
+
         	}); 
         } else {
 	        image.src = src; 
-    	    image.relativeSrc = image.src;        
         }
-        
     },
     
 	resolveTile: function(image, src) {
-		var tile = this.regex;
-  		if(tile.test(src)){
-			tile.exec(src);
+  		if(this.regex.test(src)){
+			this.regex.exec(src);
 	  		this.fetchTileFromCache(image,RegExp.$1,RegExp.$2,RegExp.$3,src);
 	  	} else {
 	  		image.src = src;
-	  		image.relativeSrc = src;		
 	  	}
 	},
 	createPrototype: function(src) {
