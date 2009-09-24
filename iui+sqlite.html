@@ -52,7 +52,7 @@
 		EventUtils.addEventListener(window, 'load', function(){
 			// init viewer
 			touchMap = new touchMapLite("viewer");
-			touchMap.init();
+			touchMap.init(false);
 		
 			// init sqlite
 			touchMap.sql = new touchMap.SQLite('touchMap','1.0','touchMap Database',20000);
