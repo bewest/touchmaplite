@@ -10,7 +10,7 @@ touchMapLite.prototype.findLocationHandler = function(e) {
 touchMapLite.prototype.nolocationFound = function(error){
 	if(error.code!=0){
 		alert('cannot determin current location ['+error.code+']');
-	} else {
+	} else {
 		return false;
 	}
 }
