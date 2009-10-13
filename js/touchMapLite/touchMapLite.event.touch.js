@@ -21,8 +21,7 @@ touchHandler = function(event)
 		
 		if(event.type == 'touchend' && lastTouchEventBeforeLast.type == 'touchend' &&
 			event.x == lastTouchEventBeforeLast.x &&
-			event.y == lastTouchEventBeforeLast.y &&
-            lastTouchEvent.touches.length==0){
+			event.y == lastTouchEventBeforeLast.y){
 			if(lastTouchEventBeforeLast.date){
 				event.date = new Date();
 				diff = event.date.getSeconds()*1000+event.date.getMilliseconds()-
@@ -46,7 +45,17 @@ touchHandler = function(event)
 		lastTouchEventBeforeLast = lastTouchEvent;
 		lastTouchEvent = event;
 		lastTouchEvent.date = new Date();
-    } else if (touches.length==2) {
+    }
+    if(event.type == 'touchend') {
+        pinchStartScale = false;
+	}
+	if (event.preventDefault) event.preventDefault();
+}
+
+
+
+function gestureHandler(event){
+ var touches = event.changedTouches;
         if (pinchStartScale==false) {
             pinchStartScale = touchMap.viewerBean.zoomLevel;
         } 
@@ -54,12 +63,8 @@ touchHandler = function(event)
             touchMap.viewerBean.zoom(1);        
         if (event.scale<1 && touchMap.viewerBean.zoomLevel-event.scale*pinchStartScale>1)
             touchMap.viewerBean.zoom(-1);
-    } 
-    if(event.type == 'touchend') {
-        pinchStartScale = false;
-	}
-	if (event.preventDefault) event.preventDefault();
-}
+    if (event.preventDefault) event.preventDefault();
+}	
 
 
 var touchArea = document.getElementById('touchArea');
@@ -73,14 +78,7 @@ if(touchArea){
 	EventUtils.addEventListener(touchArea, 'touchmove', touchHandler, true);
 	EventUtils.addEventListener(touchArea, 'touchend', touchHandler, true);
 	EventUtils.addEventListener(touchArea, 'touchcancel', touchHandler, true);
-	EventUtils.addEventListener(touchArea, 'gestureend', touchHandler, true);
+    EventUtils.addEventListener(touchArea, 'gesturestart', gestureHandler, false);
+    EventUtils.addEventListener(touchArea, 'gesturechange', gestureHandler, false);
+    EventUtils.addEventListener(touchArea, 'gestureend', gestureHandler, false);
 }
-/*
-function gestureHandler(event){
-
-}		
-		
-EventUtils.addEventListener(touchArea, "gesturestart", gestureHandler, false);
-EventUtils.addEventListener(touchArea, "gesturechange", gestureHandler, false);
-EventUtils.addEventListener(touchArea, "gestureend", gestureHandler, false);
-*/
