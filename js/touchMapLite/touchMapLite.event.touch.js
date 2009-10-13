@@ -21,7 +21,8 @@ touchHandler = function(event)
 		
 		if(event.type == 'touchend' && lastTouchEventBeforeLast.type == 'touchend' &&
 			event.x == lastTouchEventBeforeLast.x &&
-			event.y == lastTouchEventBeforeLast.y){
+			event.y == lastTouchEventBeforeLast.y &&
+            lastTouchEvent.touches.length==0){
 			if(lastTouchEventBeforeLast.date){
 				event.date = new Date();
 				diff = event.date.getSeconds()*1000+event.date.getMilliseconds()-
@@ -44,17 +45,20 @@ touchHandler = function(event)
 
 		lastTouchEventBeforeLast = lastTouchEvent;
 		lastTouchEvent = event;
-		lastTouchEvent.date = new Date();;
-
-		if (event.preventDefault) event.preventDefault();
-    } else {
-    
-		if(event.scale>1) touchMap.viewerBean.zoom(1);
-		if(event.scale<1) touchMap.viewerBean.zoom(-1);
-
-		if (event.preventDefault) event.preventDefault();
-		
-    }
+		lastTouchEvent.date = new Date();
+    } else if (touches.length==2) {
+        if (pinchStartScale==false) {
+            pinchStartScale = touchMap.viewerBean.zoomLevel;
+        } 
+        if (event.scale>1 && event.scale*pinchStartScale-touchMap.viewerBean.zoomLevel>1)
+            touchMap.viewerBean.zoom(1);        
+        if (event.scale<1 && touchMap.viewerBean.zoomLevel-event.scale*pinchStartScale>1)
+            touchMap.viewerBean.zoom(-1);
+    } 
+    if(event.type == 'touchend') {
+        pinchStartScale = false;
+	}
+	if (event.preventDefault) event.preventDefault();
 }
 
 
@@ -62,12 +66,14 @@ var touchArea = document.getElementById('touchArea');
 var lastTouchEvent = false;
 var lastTouchEventBeforeLast = false;
 var touchDate = false;
+var pinchStartScale = false;
 
 if(touchArea){
 	EventUtils.addEventListener(touchArea, 'touchstart', touchHandler, true);
 	EventUtils.addEventListener(touchArea, 'touchmove', touchHandler, true);
 	EventUtils.addEventListener(touchArea, 'touchend', touchHandler, true);
 	EventUtils.addEventListener(touchArea, 'touchcancel', touchHandler, true);
+	EventUtils.addEventListener(touchArea, 'gestureend', touchHandler, true);
 }
 /*
 function gestureHandler(event){
