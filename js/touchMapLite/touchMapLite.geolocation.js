@@ -16,17 +16,22 @@ touchMapLite.prototype.nolocationFound = function(error){
 }
 
 touchMapLite.prototype.recenterLonLat = function(position){
+    var wasZoomed=false;
 	lon = position.coords.longitude;
 	lat = position.coords.latitude;
 	findOnMap.viewerBean.initialPan = { 'x' : findOnMap.lon2pan(lon), 'y' : findOnMap.lat2pan(lat)};
 	if(position.coords.accuracy){	
 		// needs a more sophisticated technique
 		zoomLevel = 18-Math.floor(Math.log(position.coords.accuracy));
-		if(zoomLevel>findOnMap.viewerBean.zoomLevel) findOnMap.viewerBean.zoomLevel = zoomLevel; 
+        if(zoomLevel!=findOnMap.viewerBean.zoomLevel) wasZoomed=true;
+		if(zoomLevel>findOnMap.viewerBean.zoomLevel) {
+            findOnMap.viewerBean.zoomLevel = zoomLevel; 
+        }
 	}
 	findOnMap.viewerBean.clear();
 	findOnMap.viewerBean.init();
-	findOnMap.viewerBean.notifyViewerMoved({x:this.viewerBean.x, y:this.viewerBean.y})
+	findOnMap.viewerBean.notifyViewerMoved({x:findOnMap.viewerBean.x, y:findOnMap.viewerBean.y});
+	if(wasZoomed==true) findOnMap.viewerBean.notifyViewerZoomed();
 	if(typeof findOnMap.marker != 'undefined'){
 		var home = new findOnMap.marker('GPS',lat, lon,findOnMap,true);
 	}
