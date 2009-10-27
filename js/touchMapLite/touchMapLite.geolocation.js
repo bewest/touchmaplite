@@ -7,6 +7,21 @@ touchMapLite.prototype.findLocationHandler = function(e) {
 	return false;
 };
 
+touchMapLite.prototype.watchLocationHandler = function(e) {
+	if(typeof(navigator.geolocation) != "undefined"){
+		if(!watchId && findOnMap != null){
+			watchId = navigator.geolocation.watchPosition(this.recenterLonLat);
+			return true;
+		} else {
+			navigator.geolocation.clearWatch(watchId);
+			watchId = false;
+		}
+	} else {
+		alert('no geolocation service')
+	}
+	return false;
+};
+
 touchMapLite.prototype.nolocationFound = function(error){
 	if(error.code!=0){
 		alert('cannot determin current location ['+error.code+']');
@@ -20,7 +35,7 @@ touchMapLite.prototype.recenterLonLat = function(position){
 	lon = position.coords.longitude;
 	lat = position.coords.latitude;
 	findOnMap.viewerBean.initialPan = { 'x' : findOnMap.lon2pan(lon), 'y' : findOnMap.lat2pan(lat)};
-	if(position.coords.accuracy){	
+	if(!watchId && position.coords.accuracy){	
 		// needs a more sophisticated technique
 		zoomLevel = 18-Math.floor(Math.log(position.coords.accuracy));
         if(zoomLevel!=findOnMap.viewerBean.zoomLevel) wasZoomed=true;
@@ -39,3 +54,4 @@ touchMapLite.prototype.recenterLonLat = function(position){
 }
 
 findOnMap = null;
+watchId = false;
