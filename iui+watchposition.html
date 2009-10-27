@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>touchMapLite - iUI Demo</title>
+    <meta charset="UTF-8" />
+ 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+ 	<meta http-equiv="imagetoolbar" content="no" />
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="robots" content="NOINDEX,NOFOLLOW" />
+	<meta name="author" content="dFacts Network" />
+	<meta name="copyright" content="2009 dFacts Network, released under Apache License, Version 2.0" />
+	<meta name="MSSmartTagsPreventParsing" content="true" />
+	<link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+	<link rel="apple-touch-icon" href="images/osm_logo.png"/>
+		<link rel="stylesheet" type="text/css" href="css/viewer.css" />
+		<link media="only screen and (max-device-width: 480px)" href="css/iphone.css" type= "text/css" rel="stylesheet">
+	<script type="text/javascript" src="js/PanoJS/EventUtils.js"></script>
+	<script type="text/javascript" src="js/PanoJS/PanoJS.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.WMS.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.OSM.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.GMap.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.permalink.OSM.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.geolocation.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.marker.js"></script>
+	<script type="text/javascript">
+		
+		var touchMap = null;
+		
+		var maximized = false;
+		
+		EventUtils.addEventListener(window, 'load', function(){
+			touchMap = new touchMapLite("viewer");
+			touchMap.init();
+		}, false);
+		
+		EventUtils.addEventListener(window, 'resize', function(){
+			touchMap.reinitializeGraphic();
+		}, false);
+		
+		
+		PanoJS.settingsHandler = function(e) {
+			window.iui.showPageById('settings');
+			return false;
+		};
+
+		toggleWatchLocation = function(node) {
+			if(!touchMap.watchLocationHandler()){
+				node.setAttribute("toggled", node.getAttribute("toggled") != "true")
+			}
+		}
+
+	</script>
+	<style type="text/css" media="screen">@import "css/iui.css";</style>
+	<script type="application/x-javascript" src="js/iui.js"></script>
+	<script type="text/javascript">
+		iui.animOn = true;
+	</script>
+	<style>
+		body {
+			overflow: hidden;
+		}
+		body .row a.dir  {
+		    display: block;
+		    margin: 0;
+		    padding: 14px 32px 8px 16px;
+		    text-decoration: none;
+		    color: inherit;
+		    background: url(images/iui/listArrow.png) no-repeat right center;
+		    font-size: 16px;
+		    font-weight: bold;
+		    text-align: left;
+		}
+		body #home {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 99;
+		}
+		#viewer .controls span.settings,
+		#viewer .controls span.zoomOut,
+		#viewer .controls span.zoomIn {
+			line-height: 20px;
+			padding: 5px 10px;
+			margin-bottom: 20px;
+			background: #fff;
+			background:	rgba(255,255,255,0.5);
+			border: solid 2px #999;
+			border: solid 2px rgba(0,0,0,0.5);	
+		}
+	</style>
+</head>
+
+<body>
+  	<div class="toolbar" id="toolbar">
+        <h1 id="pageTitle"></h1>
+        <a id="backButton" class="button" href="#"></a>
+    </div>    
+    <ul id="home" title="Map" selected="true">
+    <div id="viewer">
+			<div class="well"><!-- --></div>
+			<div class="surface" id="touchArea"><!-- --></div>
+			<div class="marker" id="markers"></div> 
+			<p class="controls">
+				<span class="settings" title="Setting">✔</span>
+				<span class="zoomIn" title="Zoom In">+</span>
+				<span class="zoomOut" title="Zoom Out">-</span>
+			</p>
+		</div>
+    </ul>
+   <ul id="osmtiles" title="OSM Tiles">
+  	    <li><a href="#home" onclick="touchMap.switchSource('OSM')">OpenStreetMap</a></li>
+        <li><a href="#home" onclick="touchMap.switchSource('OEPN')">ÖPNV Karte</a></li>
+        <li><a href="#home" onclick="touchMap.switchSource('OSB')">OpenStreetBrowser</a></li>
+        <li><a href="#home" onclick="touchMap.switchSource('OSMcylce')">OpenCycleMap</a></li>
+    </ul>
+   <ul id="othersources" title="Other Sources">
+  	    <li><a href="#googlesources">Google Tiles</a></li>
+    </ul>
+   <ul id="googlesources" title="Google Sources">
+  	    <li><a href="#home" onclick="touchMap.switchSource('GSat')">Google Satellite Images</a></li>
+        <li><a href="#home" onclick="touchMap.switchSource('GMap')">Google Map</a></li>
+        <li><a href="#home" onclick="touchMap.switchSource('GTopo')">Google Topo</a></li>
+    </ul>
+   <ul id="wmssources" title="WMS Sources">
+  	    <li><a href="#home" onclick="touchMap.switchSource('GeobasisBB')">Geobasis Berin-Brandenburg</a></li>
+        <li><a href="#home" onclick="touchMap.switchSource('GaiaMV')">Gaia Mecklenburg-Vorpommern</a></li>
+        <li><a href="#home" onclick="touchMap.switchSource('NASA')">NASA OnEarth Global Mosaic</a></li>
+        <li><a href="#home" onclick="touchMap.switchSource('metacarta')">MetaCarta Labs</a></li>
+    </ul>
+ 
+    <div id="settings" title="Settings" class="panel">
+
+        <h2>Sources</h2>
+        <fieldset>
+            <div class="row">
+                <a class="dir" href="#osmtiles">OSM Tiles</a>
+            </div>
+            <div class="row">
+                <a class="dir" href="#wmssources">WMS Sources</a>
+            </div>
+            <div class="row">
+                <a class="dir" href="#othersources">Other Sources</a>
+            </div>
+        </fieldset>
+ 
+        <h2>Position</h2>
+        <fieldset>
+            <div class="row">
+                <a class="dir" onclick="touchMap.findLocationHandler();" href="#home">Find Location</a>
+            </div>
+            <div class="row">
+              <label>Watch Location</label>
+                <div class="toggle" onclick="toggleWatchLocation(this);"><span class="thumb"></span><span class="toggleOn">ON</span><span class="toggleOff">OFF</span></div>
+            </div>
+            <div class="row">
+                <a class="dir" onclick="touchMap.placeMarkerHandler();" href="#home">Mark Center</a>
+            </div>
+            <div class="row">
+                <a class="dir" onclick="touchMap.permaLinkHandler();" href="#home">Permalink</a>
+            </div>
+		</fieldset>
+    </div>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.touch.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.wheel.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.dblclick.js"></script>
+</body>
+</html>
