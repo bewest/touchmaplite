@@ -5,6 +5,7 @@
 touchHandler = function(event)
 {
 //	event.preventDefault()
+    var self = touchMap.viewerBean;
     var touches = event.changedTouches,
         first = touches[0],
         type = '';
@@ -46,25 +47,57 @@ touchHandler = function(event)
 		lastTouchEvent = event;
 		lastTouchEvent.date = new Date();
     }
-    if(event.type == 'touchend') {
-        pinchStartScale = false;
+    if(event.type == 'touchend') { 
+        if(typeof(lastKnownScale) != "undefined" && lastKnownScale!=false){    
+            document.getElementById('well').setAttribute('style','-webkit-transform: scale(1);');
+            pinchStartScale = false;
+            var faktor= lastKnownScale;
+            if( self.tileSize*lastKnownScale < PanoJS.TILE_SIZE*0.5) faktor=PanoJS.TILE_SIZE/self.tileSize;
+            if( self.tileSize*lastKnownScale > PanoJS.TILE_SIZE*2) faktor=PanoJS.TILE_SIZE/self.tileSize;
+
+        	self.blank();
+    		var coords = { 'x' : Math.floor(self.width / 2), 'y' : Math.floor(self.height / 2) };
+    		var before = {
+    			'x' : (coords.x - self.x),
+    			'y' : (coords.y - self.y)
+    		};
+    		var after = {
+    			'x' : Math.floor(before.x * faktor),
+    			'y' : Math.floor(before.y * faktor)
+    		};
+    		self.x = coords.x - after.x;
+    		self.y = coords.y - after.y;
+
+            if( self.tileSize*lastKnownScale < PanoJS.TILE_SIZE*0.5) {
+                self.tileSize=PanoJS.TILE_SIZE;
+        		self.positionTiles();
+                touchMap.viewerBean.zoom(-1);
+            } else if( self.tileSize*lastKnownScale > PanoJS.TILE_SIZE*2) {
+                self.tileSize=PanoJS.TILE_SIZE;
+        		self.positionTiles();
+                touchMap.viewerBean.zoom(1);
+            } else {       		
+                self.tileSize=self.tileSize*faktor;
+        		self.positionTiles();
+    		}
+            lastKnownScale=false;
+        }
 	}
-	if (event.preventDefault) event.preventDefault();
+    if (event.preventDefault) event.preventDefault();
 }
 
-
-
 function gestureHandler(event){
- var touches = event.changedTouches;
-        if (pinchStartScale==false) {
-            pinchStartScale = touchMap.viewerBean.zoomLevel;
-        } 
-        if (event.scale>1 && event.scale*pinchStartScale-touchMap.viewerBean.zoomLevel>1)
-            touchMap.viewerBean.zoom(1);        
-        if (event.scale<1 && touchMap.viewerBean.zoomLevel-event.scale*pinchStartScale>1)
-            touchMap.viewerBean.zoom(-1);
+    var touches = event.changedTouches;
+    if (pinchStartScale==false) {
+        pinchStartScale = touchMap.viewerBean.zoomLevel;
+    } 
+    if(pinchStartScale && event.scale){
+        document.getElementById('well').setAttribute('style','-webkit-transform: scale('+event.scale+');');
+        lastKnownScale=event.scale;
+    }
     if (event.preventDefault) event.preventDefault();
-}	
+} 
+
 
 
 var touchArea = document.getElementById('touchArea');
@@ -72,6 +105,7 @@ var lastTouchEvent = false;
 var lastTouchEventBeforeLast = false;
 var touchDate = false;
 var pinchStartScale = false;
+var lastKnownScale = false;
 
 if(touchArea){
 	EventUtils.addEventListener(touchArea, 'touchstart', touchHandler, true);
