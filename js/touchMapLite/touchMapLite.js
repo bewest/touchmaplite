@@ -122,5 +122,27 @@ touchMapLite.prototype = {
 	  	n=Math.PI-2*Math.PI*pany;
 		lat =(180/Math.PI*Math.atan(0.5*(Math.exp(n)-Math.exp(-n))));
 		return {x:lon, y:lat}
+	},
+	resetUnevenZoom: function() {
+        document.getElementById('well').setAttribute('style','-webkit-transform: scale(1);');
+        pinchStartScale = false;
+        var faktor= PanoJS.TILE_SIZE/self.tileSize;
+        
+        this.viewerBean.blank();
+        var coords = { 'x' : Math.floor(this.viewerBean.width / 2), 'y' : Math.floor(this.viewerBean.height / 2) };
+        var before = {
+        	'x' : (coords.x - this.viewerBean.x),
+        	'y' : (coords.y - this.viewerBean.y)
+        };
+        var after = {
+        	'x' : Math.floor(before.x * faktor),
+        	'y' : Math.floor(before.y * faktor)
+        };
+        this.viewerBean.x = coords.x - after.x;
+        this.viewerBean.y = coords.y - after.y;
+        
+        this.viewerBean.tileSize=PanoJS.TILE_SIZE;
+    	this.viewerBean.positionTiles();
+        touchMap.viewerBean.zoom(1);
 	}
 }
