@@ -79,6 +79,7 @@ touchHandler = function(event)
             } else {       		
                 self.tileSize=self.tileSize*faktor;
         		self.positionTiles();
+        		touchMap.viewerBean.notifyViewerZoomed();
     		}
             lastKnownScale=false;
         }
