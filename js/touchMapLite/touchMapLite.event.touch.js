@@ -51,9 +51,9 @@ touchHandler = function(event)
         if(typeof(lastKnownScale) != "undefined" && lastKnownScale!=false){    
             document.getElementById('well').setAttribute('style','-webkit-transform: scale(1);');
             pinchStartScale = false;
-            var faktor= lastKnownScale;
-            if( self.tileSize*lastKnownScale < PanoJS.TILE_SIZE*0.5) faktor=PanoJS.TILE_SIZE/self.tileSize;
-            if( self.tileSize*lastKnownScale > PanoJS.TILE_SIZE*2) faktor=PanoJS.TILE_SIZE/self.tileSize;
+            var faktor=1; // lastKnownScale;
+            if( self.tileSize*lastKnownScale < PanoJS.TILE_SIZE*0.7) faktor=PanoJS.TILE_SIZE/self.tileSize;
+            if( self.tileSize*lastKnownScale > PanoJS.TILE_SIZE*1.7) faktor=PanoJS.TILE_SIZE/self.tileSize;
 
         	self.blank();
     		var coords = { 'x' : Math.floor(self.width / 2), 'y' : Math.floor(self.height / 2) };
@@ -68,18 +68,19 @@ touchHandler = function(event)
     		self.x = coords.x - after.x;
     		self.y = coords.y - after.y;
 
-            if( self.tileSize*lastKnownScale < PanoJS.TILE_SIZE*0.5) {
+            if( self.tileSize*lastKnownScale < PanoJS.TILE_SIZE*0.7) {
                 self.tileSize=PanoJS.TILE_SIZE;
         		self.positionTiles();
                 touchMap.viewerBean.zoom(-1);
-            } else if( self.tileSize*lastKnownScale > PanoJS.TILE_SIZE*2) {
+            } else if( self.tileSize*lastKnownScale > PanoJS.TILE_SIZE*1.7) {
                 self.tileSize=PanoJS.TILE_SIZE;
         		self.positionTiles();
                 touchMap.viewerBean.zoom(1);
             } else {       		
-                self.tileSize=self.tileSize*faktor;
+//                self.tileSize=self.tileSize*faktor;
+                self.tileSize=PanoJS.TILE_SIZE;
         		self.positionTiles();
-        		touchMap.viewerBean.notifyViewerZoomed();
+        		//touchMap.viewerBean.notifyViewerZoomed();
     		}
             lastKnownScale=false;
         }
