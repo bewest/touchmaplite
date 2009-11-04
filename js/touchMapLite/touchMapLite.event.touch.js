@@ -77,7 +77,7 @@ touchHandler = function(event)
         		self.positionTiles();
                 touchMap.viewerBean.zoom(1);
             } else {       		
-//                self.tileSize=self.tileSize*faktor;
+                //self.tileSize=self.tileSize*faktor;
                 self.tileSize=PanoJS.TILE_SIZE;
         		self.positionTiles();
         		//touchMap.viewerBean.notifyViewerZoomed();
