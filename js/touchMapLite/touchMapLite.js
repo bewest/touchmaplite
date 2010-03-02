@@ -27,23 +27,29 @@
 	this.zoom = 0;
 	this.defaultMap = 'OSM';
 	this.map = this.defaultMap;
-	this.tileSources = {};
 	this.viewerId = domID;
 	this.viewerBean = null;
-
-	this.tileSources = {'OSM': 			{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://a.tile.openstreetmap.org','','png')},
-						'OSMcylce': 	{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://a.andy.sandbox.cloudmade.com/tiles/cycle','','png')},
-						'OEPN': 		{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://tile.Ã¶pnvkarte.de/tilegen','','png')},
-						'OSB': 			{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://www.openstreetbrowser.org/tiles/base','','png')},
-						// legal? http://code.google.com/p/gmaps-api-issues/issues/detail?id=1396
-						'GMap': 		{'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://mt0.google.com','vt/')},
-						'GSat': 		{'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://khm2.google.com','kh/v=43&')},
-						'GTopo': 		{'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://mt2.google.com','vt/v=w2p.106&')},
-						'GeobasisBB': 	{'copyright':'Data (C) by Landesvermessung und Geobasisinformation Brandenburg','provider':new this.TileUrlProviderWMS('http://isk.geobasis-bb.de/ows/dnm.php?','bg,siedlung,vegetation,gewaesser,transport,strassennamen,ortsnamen,gewaessernamen','','image/png',false)},
-						'GaiaMV': 		{'copyright':'Data (C) by Geodateninfrastruktur Mecklenburg-Vorpommern (GDI-MV)','provider':new this.TileUrlProviderWMS('http://www.gaia-mv.de/dienste/gdimv_dtk?','gdimv_dtk','','image/png',true)},
-						'NASA':			{'copyright':'Data (C) by NASA','provider':new this.TileUrlProviderWMS('http://wms.jpl.nasa.gov/wms.cgi?','modis,global_mosaic',',','image/jpeg',true)},
-						'metacarta':	{'copyright':'Data (C) by metacarta','provider':new this.TileUrlProviderWMS('http://labs.metacarta.com/wms/vmap0?','basic','','image/jpeg')}
+	this.tileSources = {};
+	if(typeof(touchMapLite.prototype.TileUrlProviderOSM) != 'undefined') {
+			this.tileSources['OSM'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://a.tile.openstreetmap.org','','png')};
+			this.tileSources['OSMcylce'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://a.andy.sandbox.cloudmade.com/tiles/cycle','','png')};
+			this.tileSources['OEPN'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://tile.špnvkarte.de/tilegen','','png')};
+			this.tileSources['OSB'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://www.openstreetbrowser.org/tiles/base','','png')};
+	}
+	// legal? http://code.google.com/p/gmaps-api-issues/issues/detail?id=1396
+	if(typeof(touchMapLite.prototype.TileUrlProviderGMap) != 'undefined') {
+			this.tileSources['GMap'] =  {'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://mt0.google.com','vt/')};
+			this.tileSources['GSat'] =  {'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://khm2.google.com','kh/v=43&')};
+			this.tileSources['GTopo'] =  {'copyright':'Data (C) by Google','provider':new this.TileUrlProviderGMap('http://mt2.google.com','vt/v=w2p.106&')};
+	}
+	if(typeof(touchMapLite.prototype.TileUrlProviderWMS) != 'undefined') {
+			this.tileSources['GeobasisBB'] =  {'copyright':'Data (C) by Landesvermessung und Geobasisinformation Brandenburg','provider':new this.TileUrlProviderWMS('http://isk.geobasis-bb.de/ows/dnm.php?','bg,siedlung,vegetation,gewaesser,transport,strassennamen,ortsnamen,gewaessernamen','','image/png',false)};
+			this.tileSources['GaiaMV'] =  {'copyright':'Data (C) by Geodateninfrastruktur Mecklenburg-Vorpommern (GDI-MV)','provider':new this.TileUrlProviderWMS('http://www.gaia-mv.de/dienste/gdimv_dtk?','gdimv_dtk','','image/png',true)};
+			this.tileSources['NASA'] =  {'copyright':'Data (C) by NASA','provider':new this.TileUrlProviderWMS('http://wms.jpl.nasa.gov/wms.cgi?','modis,global_mosaic',',','image/jpeg',true)};
+			this.tileSources['metacarta'] =  {'copyright':'Data (C) by metacarta','provider':new this.TileUrlProviderWMS('http://labs.metacarta.com/wms/vmap0?','basic','','image/jpeg')};
 	};
+
+
 
 }
 
