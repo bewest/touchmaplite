@@ -133,3 +133,7 @@ body {
 	z-index:999;
 	color: #000;
 }
+
+#viewer * {
+-webkit-user-select:ignore
+}
