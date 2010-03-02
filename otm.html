@@ -43,6 +43,11 @@
 			touchMap.reinitializeGraphic();
 		}, false);
 		
+		EventUtils.addEventListener(window, 'webkitTransitionEnd', function(){
+			scrollTo(0,0);
+		}, false);
+		
+
 		
 		PanoJS.settingsHandler = function(e) {
 			window.iui.showPageById('settings');
