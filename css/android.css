@@ -1,0 +1,17 @@
+#viewer .copyright,
+#viewer .controls span.mark,
+#viewer .controls span.permaLink {
+	display: none;
+}
+
+#viewer .controls span.zoomIn {
+	font-size: 3em;
+	line-height: 2em;
+	padding: 0 0.2em 0.2em;
+}
+
+#viewer .controls span.zoomOut {
+	font-size: 3em;
+	line-height: 2em;
+	padding: 0 0.2em 0.1em;
+}
