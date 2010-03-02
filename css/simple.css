@@ -1,0 +1,33 @@
+#viewer .copyright,
+#viewer .controls span.mark,
+#viewer .controls span.permaLink {
+	display: none;
+}
+
+
+#viewer .controls span.zoomIn,
+#viewer .controls span.zoomOut,
+#viewer .controls span.settings {
+	text-indent: -999em;
+	padding: 2px;
+	background: url(../images/buttons.png) 0 0 no-repeat;
+	width: 36px;
+	height: 40px;
+	display: block;
+	border: none;
+	margin: 0 0 10px 0;
+}
+
+
+#viewer .controls span.zoomIn {
+	background-position: 0px -102px;
+}
+
+#viewer .controls span.zoomOut {
+	background-position: 0px -50px;
+}
+
+
+#viewer .controls span.settings {
+	background-position: 0px 2px;
+}
