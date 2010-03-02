@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>OpenTouchMap</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="minimum-scale=1.0, 
+                                   width=device-width, 
+                                   maximum-scale=1.6, 
+                                   user-scalable=no">
+	<meta name="language" content="en">
+	<meta name="keywords" content="OpenStreetMap, iPod Touch, IPhone, Map, Mobile Safari, Mobile Maps">
+	<meta name="description" content="OpenStreetmap on the IPhone or the Ipod Touch, with gesture-support">
+
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+
+	<link rel="stylesheet" type="text/css" href="css/viewer.css" />
+	<link media="only screen and (max-device-width: 480px)" href="css/iphone.css" type= "text/css" rel="stylesheet">
+	<script type="text/javascript" src="js/PanoJS/EventUtils.js"></script>
+	<script type="text/javascript" src="js/PanoJS/PanoJS.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.OSM.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.permalink.OSM.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.geolocation.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.marker.js"></script>
+	<script type="text/javascript">
+		
+		var touchMap = null;
+		
+		var maximized = false;
+		
+		EventUtils.addEventListener(window, 'load', function(){
+			touchMap = new touchMapLite("viewer");
+			touchMap.init();
+		}, false);
+		
+		EventUtils.addEventListener(window, 'resize', function(){
+			touchMap.reinitializeGraphic();
+		}, false);
+		
+		
+		PanoJS.settingsHandler = function(e) {
+			window.iui.showPageById('settings');
+			return false;
+		};
+
+		mailPosition = function(e){
+			pos = touchMap.currentLonLat(touchMap.viewerBean);
+			zl = touchMap.viewerBean.zoomLevel;
+			window.location.href = "mailto:?body=%0A"+window.location.href.split('?' )[0]+"?latlonzoom="+pos.y+","+pos.x+","+zl
+		}
+
+	</script>
+	<style type="text/css" media="screen">@import "css/iui.css";</style>
+	<script type="application/x-javascript" src="js/iui.js"></script>
+	<script type="text/javascript">
+		iui.animOn = true;
+	</script>
+	<style>
+		body {
+			overflow: hidden;
+		}
+		body .row a.dir  {
+		    display: block;
+		    margin: 0;
+		    padding: 14px 32px 8px 16px;
+		    text-decoration: none;
+		    color: inherit;
+		    background: url(images/iui/listArrow.png) no-repeat right center;
+		    font-size: 16px;
+		    font-weight: bold;
+		    text-align: left;
+		}
+		body #home {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 99;
+		}
+	</style>
+</head>
+
+<body>
+  	<div class="toolbar" id="toolbar">
+        <h1 id="pageTitle"></h1>
+        <a id="backButton" class="button" href="#"></a>
+    </div>    
+    <ul id="home" title="Map" selected="true">
+    <div id="viewer">
+			<div class="well"><!-- --></div>
+			<div class="surface" id="touchArea"><!-- --></div>
+			<div class="marker" id="markers"></div> 
+			<p class="controls">
+				<span class="settings" title="Setting">✔</span>
+				<span class="zoomIn" title="Zoom In">+</span>
+				<span class="zoomOut" title="Zoom Out">-</span>
+			</p>
+		</div>
+    </ul>
+ 
+    <div id="settings" title="Settings" class="panel">
+
+        <h2>Position</h2>
+        <fieldset>
+            <div class="row">
+                <a class="dir" onclick="touchMap.findLocationHandler();" href="#home">Show my Position</a>
+            </div>
+            <div class="row">
+                <a class="dir" onclick="mailPosition();" href="#home">Mail Position</a>
+            </div>
+		</fieldset>
+
+        <h2>Info</h2>
+        <fieldset>
+            <p style="text-align:left; padding: 0 10px 10px">
+		  	    OpenTouchMap is a project by
+                OpenStreetMap-User <a href="http://wiki.openstreetmap.org/wiki/User:Nochmaltobi">nochmaltobi</a>.<br/>
+                It is based on <a href="http://sourceforge.net/projects/touchmaplite/">touchMapLite</a>.<br/>
+    			Please feel free to suggest improvements.<br/>
+    			Maps: <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors,
+                <a href="http://creativecommons.org/licenses/by-sa/2.0/">CCBYSA</a>
+            </p>
+        </fieldset>
+
+
+<!--        <h2>Sources</h2>
+        <fieldset>
+            <div class="row">
+		  	    <a class="dir" onclick="touchMap.switchSource('OSM')">OpenStreetMap</a>
+            </div>
+        </fieldset>
+ -->
+    </div>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.touch.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.wheel.js"></script>
+	<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.dblclick.js"></script>
+</body>
+</html>
