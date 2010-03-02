@@ -4,6 +4,13 @@
 	display: none;
 }
 
+#viewer .controls {
+	margin: 0;
+	position: absolute;
+	right: 1em;
+	top: 1em;;
+
+}
 
 #viewer .controls span.zoomIn,
 #viewer .controls span.zoomOut,
@@ -15,7 +22,7 @@
 	height: 40px;
 	display: block;
 	border: none;
-	margin: 0 0 10px 0;
+	margin: 0 0 0px 0;
 }
 
 
