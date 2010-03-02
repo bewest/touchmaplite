@@ -57,7 +57,7 @@
 		}
 
 	</script>
-	<link rel="stylesheet" type="text/css" href="css/iui-non-apple.css" />
+	<link id="iui" rel="stylesheet" type="text/css" href="css/iui.css" />
 	<script type="application/x-javascript" src="js/iui.js"></script>
 	<script type="text/javascript">
 		iui.animOn = true;
@@ -67,6 +67,7 @@
       var ua = navigator.userAgent;
       if(ua.match("Android")){
         document.getElementById("css").href = "css/android.css";
+        document.getElementById("iui").href = "css/iui-non-apple.css";
       }
     })();
     </script>
