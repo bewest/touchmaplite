@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>touchMapLite | simple example</title>
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ 		<link rel="stylesheet" type="text/css" href="css/viewer.css" />
+ 		<link media="only screen and (max-device-width: 480px)" href="css/iphone.css" type= "text/css" rel="stylesheet">
+		<script type="text/javascript" src="js/PanoJS/EventUtils.js"></script>
+		<script type="text/javascript" src="js/PanoJS/PanoJS.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.tileUrlProvider.OSM.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.geolocation.js"></script>
+		<script type="text/javascript">
+// <![CDATA[
+
+
+var touchMap = null;
+
+var maximized = false;
+
+EventUtils.addEventListener(window, 'load', function(){
+	touchMap = new touchMapLite("viewer");
+//	touchMap.tileSources = {'OSM': 	{'copyright':'Data CC-By-SA by OpenStreetMap','provider':new touchMap.TileUrlProviderOSM('http://a.tile.openstreetmap.org','','png')}};
+	touchMap.init();
+}, false);
+
+EventUtils.addEventListener(window, 'resize', function(){
+	touchMap.reinitializeGraphic();
+}, false);
+
+
+PanoJS.findLocationHandler = function(e) {
+	findOnMap = touchMap;
+	touchMap.findLocationHandler();
+	return false;
+};
+
+
+
+// ]]>
+		</script>
+	</head>
+	<body>
+		<div id="viewer">
+			<div class="well"><!-- --></div>
+			<div class="surface" id="touchArea"><!-- --></div>
+			<div class="marker" id="markers"></div> 
+			<p class="controls">
+				<span class="zoomIn" title="Zoom In">+</span>
+				<span class="zoomOut" title="Zoom Out">-</span>
+				<br />
+				<span class="findLocation" title="Find Current Location">GPS</span>
+			</p>
+			<p class="copyright">touchMapLite, <span id='copyright'></span></p>
+		</div>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.touch.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.wheel.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.dblclick.js"></script>
+	</body>
+</html>
