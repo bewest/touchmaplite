@@ -1,11 +1,48 @@
-touchMapLite.prototype.findLocationHandler = function(e) {
-	if(typeof(navigator.geolocation) != "undefined" && findOnMap != null){
-		  navigator.geolocation.getCurrentPosition(this.recenterLonLat, this.nolocationFound);
-	} else {
-		alert('no geolocation service')
+if(typeof(navigator.geolocation) != "undefined"){
+
+	touchMapLite.prototype.findLocationHandler = function(e) {
+		if(findOnMap != null){
+			  navigator.geolocation.getCurrentPosition(this.recenterLonLat, this.nolocationFound);
+		}
+		return false;
+	};
+
+} else if(typeof google != "undefined" && typeof google.gears != "undefined"){
+// android
+	var geo = google.gears.factory.create('beta.geolocation');
+
+	touchMapLite.prototype.findLocationHandler = function(e) {
+		if(typeof(geo.geolocation) != "undefined" && findOnMap != null){
+			 geo.geolocation.getCurrentPosition(this.recenterLonLat, this.nolocationFound);
+		} else {
+			alert('no geolocation service')
+		}
+		return false;
 	}
-	return false;
-};
+} else if(typeof blackberry != "undefined" && typeof blackberry.location != "undefined"){
+// blackberry
+	touchMapLite.prototype.findLocationHandler = function(e) {
+		if(blackberry.location.GPSSupported && findOnMap != null){
+			 if(typeof blackberry.location.longitude  != "undefined"){
+				 position = {coords:{longitude:blackberry.location.longitude, latitude:blackberry.location.latitude}};
+				 this.prototype.recenterLonLat(position);
+			 } else {
+				 this.nolocationFound();
+			 }
+		} else {
+			alert('no geolocation service')
+		}
+		return false;
+	}
+} else {
+// dummy
+	touchMapLite.prototype.findLocationHandler = function(e) {
+		alert('no geolocation service')
+		return false;
+	};
+
+}
+
 
 touchMapLite.prototype.watchLocationHandler = function(e) {
 	if(typeof(navigator.geolocation) != "undefined"){
