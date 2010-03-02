@@ -20,8 +20,7 @@
 	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 
 	<link rel="stylesheet" type="text/css" href="css/viewer.css" />
-	<link id="css" media="only screen and (max-device-width: 480px)" href="css/iphone.css" type= "text/css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="css/iui-non-apple.css" />
+	<link rel="stylesheet" type="text/css" href="css/simple.css" />
 	<script type="text/javascript" src="js/PanoJS/EventUtils.js"></script>
 	<script type="text/javascript" src="js/PanoJS/PanoJS.js"></script>
 	<script type="text/javascript" src="js/touchMapLite/touchMapLite.js"></script>
@@ -58,15 +57,39 @@
 
 	</script>
 	<link id="iui" rel="stylesheet" type="text/css" href="css/iui.css" />
+	<style>
+		body, html {
+			overflow: hidden;
+			background: #dddfe1;
+		}
+		
+		body .row a.dir  {
+		    display: block;
+		    margin: 0;
+		    padding: 14px 32px 8px 16px;
+		    text-decoration: none;
+		    color: inherit;
+		    background: url(images/iui/listArrow.png) no-repeat right center;
+		    font-size: 16px;
+		    font-weight: bold;
+		    text-align: left;
+		}
+		body #home {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 99;
+		}
+	</style>
+
 	<script type="application/x-javascript" src="js/iui.js"></script>
 	<script type="text/javascript">
 		iui.animOn = true;
 	</script>
-	 <script type="text/javascript" charset="utf-8">
+	<script type="text/javascript" charset="utf-8">
     (function(){
       var ua = navigator.userAgent;
       if(ua.match("Android")){
-        document.getElementById("css").href = "css/android.css";
         document.getElementById("iui").href = "css/iui-non-apple.css";
       }
     })();
