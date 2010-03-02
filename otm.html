@@ -43,9 +43,7 @@
 			touchMap.reinitializeGraphic();
 		}, false);
 		
-		EventUtils.addEventListener(window, 'webkitTransitionEnd', function(){
-			setTimeout(scrollTo,0,0,0);
-		}, false);
+		setInterval(scrollTo,100,0,0);
 		
 
 		
