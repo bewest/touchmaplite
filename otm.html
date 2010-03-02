@@ -51,6 +51,22 @@
 			window.iui.showPageById('settings');
 			return false;
 		};
+		
+		PanoJS.mousePressedHandler = function(e) {
+			e = e ? e : window.event;
+			if (e.button < 2) {
+				var self = this.backingBean;
+				var coords = self.resolveCoordinates(e);
+				if (self.pointExceedsBoundaries(coords)) {
+					e.cancelBubble = true;
+				} else {
+					self.press(coords);
+				}
+			}
+
+	    	if (event.preventDefault) event.preventDefault();
+			return false;
+		};
 
 		mailPosition = function(e){
 			pos = touchMap.currentLonLat(touchMap.viewerBean);
