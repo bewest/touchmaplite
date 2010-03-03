@@ -14,3 +14,7 @@ js/touchMapLite/touchMapLite.event.wheel.js
 js/touchMapLite/touchMapLite.geolocation.js
 js/touchMapLite/touchMapLite.js
 
+NETWORK:
+http://opentouchmap.org
+http://www.opentouchmap.org
+http://a.tile.openstreetmap.org
