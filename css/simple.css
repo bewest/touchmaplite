@@ -8,13 +8,15 @@
 	margin: 0;
 	position: absolute;
 	right: 1em;
-	top: 1em;;
-
+	top: 1em;
+	-webkit-user-select: none;
 }
 
 #viewer .controls span.zoomIn,
 #viewer .controls span.zoomOut,
-#viewer .controls span.settings {
+#viewer .controls span.settings,
+#viewer .controls span.findLocation,
+#viewer .controls span.info{
 	text-indent: -999em;
 	padding: 2px;
 	background: url(../images/buttons.png) 0 0 no-repeat;
@@ -23,6 +25,8 @@
 	display: block;
 	border: none;
 	margin: 0 0 0px 0;
+	opacity: 0.7;
+	
 }
 
 
@@ -37,4 +41,14 @@
 
 #viewer .controls span.settings {
 	background-position: 0px 2px;
+}
+
+
+#viewer .controls span.findLocation {
+	background-position: 0px -153px;
+}
+
+
+#viewer .controls span.info {
+	background-position: 0px -203px;
 }
