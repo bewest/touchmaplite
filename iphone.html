@@ -18,13 +18,34 @@
 		
 <style>
 
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote,
+pre, form, fieldset, table, th, td { margin: 0; padding: 0; }
+
+/*****Basic Elements*****/
+body {
+	font-family: Helvetica, sans-serif;
+	text-align: center;
+	-webkit-text-size-adjust: none;
+	-webkit-user-select: none;
+}
+p {
+	color: #000;
+	font-size: 13px;
+	text-align: left;
+	margin: 0 0 1em;
+}
+a {
+	color: #000;
+	font-weight: bold;
+}
+
+
 #container {
 	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: #aaa;
 	-webkit-perspective: 780;
 }
 
@@ -58,13 +79,12 @@
 }
 
 #meta {
-	font-size: 17px;
 	position: absolute;
 	top: 20px;
 	bottom: 20px;
 	right: 20px;
 	left: 20px;
-	padding: 140px 20px 0px;
+	padding: 130px 20px 0px;
 	color: #000;
 	border: 1px solid #aaa;
 	-webkit-border-radius: 10px;
@@ -73,13 +93,14 @@
 	z-index: 150;
 	-webkit-transform: rotateY(-180deg);
 	-webkit-backface-visibility: hidden;
+	background: #eee;
 }
 
 .flipped {
 	-webkit-transform: rotateY(-180deg);
 }
 
-#button {
+.button {
 	font-size: 17px;
 	color: #000;
 	height: 43px;
@@ -94,30 +115,35 @@
 	right: 15px;
 }
 
-#button.close {
+.button.close {
 	position: absolute;
 	bottom: 15px;
+	right: 180px;
 }
 
 
-#button.mail {
+.button.mail {
 	position: absolute;
-	bottom: 75px;
+	bottom: 15px;
+	left: 180px;
+	right: 15px;
+
 }
 
-#button.find {
+.button.find {
 	position: absolute;
-	top: 45px;
+	padding:0;
+	top: 35px;
 }
 
-#address {
+#search {
 	position: absolute;
 	top: 15px;
 	left: 15px;
 	right: 15px;
-	height: 43px;
+	height: 33px;
 	font-size: 17px;
-	border: 1px solid #aaa;
+	border: 2px solid #aaa;
 	padding: 0px 5px;
 }
 
@@ -129,7 +155,7 @@
 submitSearch = function() {
 	req = new XMLHttpRequest();
 	req.onreadystatechange = processSearch;
-	req.open('GET', 'http://opentouchmap.org/2/search.php?search='+document.getElementById('address').value, true);
+	req.open('GET', 'http://opentouchmap.org/2/search.php?search='+document.getElementById('search').value, true);
 	req.send();
 }
 
@@ -236,15 +262,14 @@ mailPosition = function(e){
     			Maps: <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors,
                 <a href="http://creativecommons.org/licenses/by-sa/2.0/">CCBYSA</a>
 			</p>
-			<input type="text" id="address" name="address" />
-			<div id="button" class="find" onclick="submitSearch(); return false;">
-				Find Address
-			</div>
-
-			<div id="button" class="mail" onclick="mailPosition(); return false;">
+			<form action="http://opentouchmap.org/2/search.php" onsubmit="submitSearch(); return false;">
+			<input type="text" id="search" name="search" />
+			<input type="submit" class="button find"  value="Find Address"/>
+			</form>
+			<div class="button mail" onclick="mailPosition(); return false;">
 				Mail Location
 			</div>
-			<div id="button" class="close" onclick="document.getElementById('card').className = ''">
+			<div class="button close" onclick="document.getElementById('card').className = ''">
 				Back to Map View
 			</div>
 		</div>
