@@ -30,7 +30,7 @@ body {
 }
 p {
 	color: #000;
-	font-size: 13px;
+	font-size: 15px;
 	text-align: left;
 	margin: 0 0 1em;
 }
@@ -114,19 +114,20 @@ a {
 	left: 15px;
 	right: 15px;
 	white-space: nowrap;
+	padding: 0px 20px;
 }
 
 .button.close {
 	position: absolute;
 	bottom: 15px;
-	right: 180px;
+	right: auto;
 }
 
 
 .button.mail {
 	position: absolute;
 	bottom: 15px;
-	left: 180px;
+	left: auto;
 	right: 15px;
 
 }
@@ -271,7 +272,7 @@ mailPosition = function(e){
 				Mail Location
 			</div>
 			<div class="button close" onclick="document.getElementById('card').className = ''">
-				Back to Map View
+				Back
 			</div>
 		</div>
 		</div>
