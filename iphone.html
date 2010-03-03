@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html manifest="iphone.manifest" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<link rel="apple-touch-icon" href="images/osm_logo.png"/>
+		<title>touchMapLite | custom iphone example</title>
+		<link rel="stylesheet" type="text/css" href="css/viewer.css" />
+		<link rel="stylesheet" type="text/css" href="css/simple.css" />
+		<script type="text/javascript" src="js/PanoJS/EventUtils.js"></script>
+		<script type="text/javascript" src="js/PanoJS/PanoJS.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.geolocation.js"></script>
+		
+<style>
+
+#container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #aaa;
+	-webkit-perspective: 780;
+}
+
+#card {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 100;
+	background-color: transparent;
+	-webkit-transform-style: preserve-3d;
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-timing-function: ease-in-out;
+	-webkit-transition-duration: 0.7s;
+}
+
+#viewer, #meta {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+}
+
+#viewer {
+	z-index: 160;
+	background-color: #aaa;
+	z-index: 100;
+	-webkit-backface-visibility: hidden;
+}
+
+#meta {
+	font-size: 17px;
+	position: absolute;
+	top: 20px;
+	bottom: 20px;
+	right: 20px;
+	left: 20px;
+	padding: 140px 20px 0px;
+	color: #000;
+	border: 1px solid #aaa;
+	-webkit-border-radius: 10px;
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 0.4s;
+	background: #eee;
+	z-index: 150;
+	-webkit-transform: rotateY(-180deg);
+	-webkit-backface-visibility: hidden;
+}
+
+.flipped {
+	-webkit-transform: rotateY(-180deg);
+}
+
+#button {
+	font-size: 17px;
+	color: #000;
+	height: 43px;
+	line-height: 43px;
+	margin-top: 30px;
+	-webkit-border-radius: 7px;
+	background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#bbb));
+	border: 1px solid #aaa;
+	text-align: center;
+	-webkit-user-select: none;
+	left: 15px;
+	right: 15px;
+}
+
+#button.close {
+	position: absolute;
+	bottom: 15px;
+}
+
+
+#button.mail {
+	position: absolute;
+	bottom: 75px;
+}
+
+#button.find {
+	position: absolute;
+	top: 45px;
+}
+
+#address {
+	position: absolute;
+	top: 15px;
+	left: 15px;
+	right: 15px;
+	height: 43px;
+	font-size: 17px;
+	border: 1px solid #aaa;
+	padding: 0px 5px;
+}
+
+</style>
+		
+		<script type="text/javascript">
+			// <![CDATA[
+
+submitSearch = function() {
+	req = new XMLHttpRequest();
+	req.onreadystatechange = processSearch;
+	req.open('GET', 'http://opentouchmap.org/2/search.php?search='+document.getElementById('address').value, true);
+	req.send();
+}
+
+
+processSearch = function() {
+	if (req.readyState == 4 && req.status == 200 && req.responseText ) {
+		var json = eval('(' + req.responseText + ')');
+
+	
+            var posStr = "";
+            if(json.xls_Response.xls_GeocodeResponse.xls_GeocodeResponseList.xls_GeocodedAddress instanceof Array) {
+                    posStr = json.xls_Response.xls_GeocodeResponse.xls_GeocodeResponseList.xls_GeocodedAddress[0].gml_Point.gml_pos;
+            } else {
+                    posStr = json.xls_Response.xls_GeocodeResponse.xls_GeocodeResponseList.xls_GeocodedAddress.gml_Point.gml_pos;
+            }
+            
+            var pos = posStr.split(" ");
+            var lon= pos[0]*1;
+            var lat= pos[1]*1;
+            
+            document.getElementById('card').className = ''
+            
+            touchMap.viewerBean.initialPan = { 'x' : touchMap.lon2pan(lon), 'y' : touchMap.lat2pan(lat)};
+            
+            touchMap.viewerBean.zoomLevel = 13; 
+            touchMap.viewerBean.clear();
+            touchMap.viewerBean.init();
+            touchMap.viewerBean.notifyViewerMoved({x:touchMap.viewerBean.x, y:touchMap.viewerBean.y});
+            touchMap.viewerBean.notifyViewerZoomed();
+            if(typeof touchMap.marker != 'undefined'){
+                var home = new touchMap.marker('Search',lat, lon,touchMap,true);
+            }
+        }
+    
+    return false;
+};
+
+var touchMap = null;
+var maximized = false;
+
+customTileSource = {
+	assembleUrl: function(xIndex, yIndex, zoom) {
+		return  'http://a.tile.openstreetmap.org/' + zoom + '/' + xIndex + '/' + yIndex + '.png';
+	}
+}
+
+EventUtils.addEventListener(window, 'load', function(){
+	touchMap = new touchMapLite("viewer");
+	touchMap.tileSources['custom'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':customTileSource};
+	touchMap.map = 'custom';
+	touchMap.init();
+}, false);
+
+EventUtils.addEventListener(window, 'resize', function(){
+	touchMap.reinitializeGraphic();
+}, false);
+
+
+PanoJS.findLocationHandler = function(e) {
+	findOnMap = touchMap;
+	touchMap.findLocationHandler();
+	return false;
+};
+
+PanoJS.infoHandler = function(e) {
+	document.getElementById('card').className = 'flipped';
+	return false;
+};
+
+mailPosition = function(e){
+			pos = touchMap.currentLonLat(touchMap.viewerBean);
+			zl = touchMap.viewerBean.zoomLevel;
+			window.location.href = "mailto:?body=%0A"+window.location.href.split('?' )[0]+"?latlonzoom="+pos.y+","+pos.x+","+zl
+		}
+
+// ]]>
+		</script>
+	</head>
+	<body>
+		<div id="container">
+		<div id="card" class="">
+		<div id="viewer">
+			<div class="well"><!-- --></div>
+			<div class="surface" id="touchArea"><!-- --></div>
+			<div class="marker" id="markers"></div> 
+			<p class="controls">
+				<span class="zoomIn" title="Zoom In">+</span>
+				<span class="zoomOut" title="Zoom Out">-</span>
+				<span class="findLocation" title="Find Current Location">GPS</span>
+				<span class="info" title="Show Info">i</span>
+			</p>
+			<p class="copyright">touchMapLite, <span id='copyright'></span></p>
+		</div>
+		<div id="meta">
+			<p>
+			OpenTouchMap is a project by
+                OpenStreetMap-User <a href="http://wiki.openstreetmap.org/wiki/User:Nochmaltobi">nochmaltobi</a>.
+             </p>
+             <p>
+                It is based on <a href="http://sourceforge.net/projects/touchmaplite/">touchMapLite</a>.<br/>
+    			Please feel free to suggest improvements.
+    		</p>
+    		<p>
+    			Maps: <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors,
+                <a href="http://creativecommons.org/licenses/by-sa/2.0/">CCBYSA</a>
+			</p>
+			<input type="text" id="address" name="address" />
+			<div id="button" class="find" onclick="submitSearch(); return false;">
+				Find Address
+			</div>
+
+			<div id="button" class="mail" onclick="mailPosition(); return false;">
+				Mail Location
+			</div>
+			<div id="button" class="close" onclick="document.getElementById('card').className = ''">
+				Back to Map View
+			</div>
+		</div>
+		</div>
+		</div>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.touch.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.wheel.js"></script>
+		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.dblclick.js"></script>
+	</body>
+</html>
