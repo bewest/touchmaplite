@@ -113,6 +113,7 @@ a {
 	-webkit-user-select: none;
 	left: 15px;
 	right: 15px;
+	white-space: nowrap;
 }
 
 .button.close {
@@ -188,6 +189,8 @@ processSearch = function() {
             if(typeof touchMap.marker != 'undefined'){
                 var home = new touchMap.marker('Search',lat, lon,touchMap,true);
             }
+        } else {
+        	alert('Error: '+req.status);
         }
     
     return false;
@@ -253,12 +256,10 @@ mailPosition = function(e){
 			<p>
 			OpenTouchMap is a project by
                 OpenStreetMap-User <a href="http://wiki.openstreetmap.org/wiki/User:Nochmaltobi">nochmaltobi</a>.
-             </p>
-             <p>
+             <br />
                 It is based on <a href="http://sourceforge.net/projects/touchmaplite/">touchMapLite</a>.<br/>
     			Please feel free to suggest improvements.
-    		</p>
-    		<p>
+    		<br />
     			Maps: <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors,
                 <a href="http://creativecommons.org/licenses/by-sa/2.0/">CCBYSA</a>
 			</p>
