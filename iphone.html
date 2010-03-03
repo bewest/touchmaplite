@@ -30,7 +30,7 @@ body {
 }
 p {
 	color: #000;
-	font-size: 15px;
+	font-size: 14px;
 	text-align: left;
 	margin: 0 0 1em;
 }
@@ -84,7 +84,7 @@ a {
 	bottom: 20px;
 	right: 20px;
 	left: 20px;
-	padding: 130px 20px 0px;
+	padding: 120px 20px 0px;
 	color: #000;
 	border: 1px solid #aaa;
 	-webkit-border-radius: 10px;
@@ -149,25 +149,35 @@ a {
 	padding: 0px 5px;
 }
 
+#viewer .controls {
+	margin: 0;
+	position: absolute;
+	right: 1em;
+	top: 2em;
+	-webkit-user-select: none;
+}
+
 </style>
 		
 		<script type="text/javascript">
 			// <![CDATA[
+var req;
 
 submitSearch = function() {
 	req = new XMLHttpRequest();
 	req.onreadystatechange = processSearch;
-	req.open('GET', 'http://opentouchmap.org/2/search.php?search='+document.getElementById('search').value, true);
+	var q = document.getElementById("search").value;
+	q = encodeURIComponent(q);
+	req.open('GET', 'http://www.opentouchmap.org/2/search.php?search='+q, true);
 	req.send();
 }
 
 
 processSearch = function() {
-	if (req.readyState == 4 && req.status == 200 && req.responseText ) {
+	if (req.readyState == 4 && req.status == 200 && req.responseText)  {
 		var json = eval('(' + req.responseText + ')');
 
-	
-            var posStr = "";
+	            var posStr = "";
             if(json.xls_Response.xls_GeocodeResponse.xls_GeocodeResponseList.xls_GeocodedAddress instanceof Array) {
                     posStr = json.xls_Response.xls_GeocodeResponse.xls_GeocodeResponseList.xls_GeocodedAddress[0].gml_Point.gml_pos;
             } else {
@@ -178,7 +188,7 @@ processSearch = function() {
             var lon= pos[0]*1;
             var lat= pos[1]*1;
             
-            document.getElementById('card').className = ''
+            document.getElementById('card').className = '';
             
             touchMap.viewerBean.initialPan = { 'x' : touchMap.lon2pan(lon), 'y' : touchMap.lat2pan(lat)};
             
@@ -190,8 +200,7 @@ processSearch = function() {
             if(typeof touchMap.marker != 'undefined'){
                 var home = new touchMap.marker('Search',lat, lon,touchMap,true);
             }
-        } else {
-        	alert('Error: '+req.status);
+
         }
     
     return false;
