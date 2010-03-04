@@ -351,8 +351,10 @@ EventUtils.addEventListener(window, 'load', function(){
 	touchMap.tileSources['custom'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':customTileSource};
 	touchMap.map = 'custom';
 	touchMap.init();
-	gotoLastLocation();
-	setInterval(storeLocation,1000)
+	if (window.navigator.standalone) {
+		gotoLastLocation();
+		setInterval(storeLocation,1000);
+	}
 }, false);
 
 
