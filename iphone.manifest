@@ -1,18 +1,16 @@
 CACHE MANIFEST
 
-css/simple.css
-css/viewer.css
 images/blank.gif
 images/buttons.png
 images/loading.gif
 iphone.html
 js/PanoJS/EventUtils.js
 js/PanoJS/PanoJS.js
+js/touchMapLite/touchMapLite.js
 js/touchMapLite/touchMapLite.event.dblclick.js
 js/touchMapLite/touchMapLite.event.touch.js
 js/touchMapLite/touchMapLite.event.wheel.js
 js/touchMapLite/touchMapLite.geolocation.js
-js/touchMapLite/touchMapLite.js
 
 NETWORK:
 http://opentouchmap.org
