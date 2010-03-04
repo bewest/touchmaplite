@@ -8,7 +8,7 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 		<link rel="apple-touch-icon-precomposed" href="images/osm_logo.png"/>
-		<title>touchMapLite | custom iphone example</title>
+		<title>touchMapLite | iphone example</title>
 		<script type="text/javascript" src="js/PanoJS/EventUtils.js"></script>
 		<script type="text/javascript" src="js/PanoJS/PanoJS.js"></script>
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.js"></script>
@@ -403,10 +403,22 @@ storeLocation = function(){
 	}
 }
 
+clearLocation = function(){
+	try {
+		localStorage.removeItem("lon");
+		localStorage.removeItem("lat");
+		localStorage.removeItem("zoom");
+	} catch (e) {
+	}
+}
+
 gotoLastLocation = function(){
 
 	try {
 		lon = parseFloat(localStorage.getItem("lon"));
+		if(lon>180 || lon<-180) lon = 0;
+		if(lat>90 || lat<-90) lat = 0;
+		if(zoom>18 || zoom<0) zoom = 1;
 		lat = parseFloat(localStorage.getItem("lat"));
 		zoom = parseInt(localStorage.getItem("zoom"));
 		touchMap.viewerBean.initialPan = { 'x' : touchMap.lon2pan(lon), 'y' : touchMap.lat2pan(lat)};
