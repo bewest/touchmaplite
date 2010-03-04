@@ -228,6 +228,18 @@ body.witheffects #meta {
 	right:15px;
 }
 
+.button.clear {
+	bottom:75px;
+	left:15px;
+	position:absolute;
+	right:15px;
+	display: none;
+}
+
+#meta.standalone .button.clear {
+	display: block;
+}
+
 .flipped {
 	-webkit-transform:rotateY(-180deg);
 }
@@ -261,18 +273,6 @@ p {
 		
 <script type="text/javascript">
 			// <![CDATA[
-
-/* update manifest */
-        if (navigator.onLine) {
-            cache = window.applicationCache;
-            cache.addEventListener('updateready',
-            function() {
-                cache.swapCache();
-                alert('touchmaplite has been successfully updated, changes will take effect next time touchmaplite starts.');
-            }
-            );
-        }
-
 
 /* search ajax */
 
@@ -405,9 +405,20 @@ storeLocation = function(){
 
 clearLocation = function(){
 	try {
+	
+		touchMap.viewerBean.initialPan = { 'x' : 0.5, 'y' : 0.5};
+		touchMap.viewerBean.zoomLevel = 1; 
+		touchMap.viewerBean.clear();
+		touchMap.viewerBean.init();
+		touchMap.viewerBean.notifyViewerMoved({x:touchMap.viewerBean.x, y:touchMap.viewerBean.y});
+		touchMap.viewerBean.notifyViewerZoomed();
+
+	
 		localStorage.removeItem("lon");
 		localStorage.removeItem("lat");
 		localStorage.removeItem("zoom");
+		
+		back();
 	} catch (e) {
 	}
 }
@@ -416,11 +427,13 @@ gotoLastLocation = function(){
 
 	try {
 		lon = parseFloat(localStorage.getItem("lon"));
+		lat = parseFloat(localStorage.getItem("lat"));
+		zoom = parseInt(localStorage.getItem("zoom"));
+
 		if(lon>180 || lon<-180) lon = 0;
 		if(lat>90 || lat<-90) lat = 0;
 		if(zoom>18 || zoom<0) zoom = 1;
-		lat = parseFloat(localStorage.getItem("lat"));
-		zoom = parseInt(localStorage.getItem("zoom"));
+
 		touchMap.viewerBean.initialPan = { 'x' : touchMap.lon2pan(lon), 'y' : touchMap.lat2pan(lat)};
 		touchMap.viewerBean.zoomLevel = zoom; 
 		touchMap.viewerBean.clear();
@@ -467,6 +480,9 @@ gotoLastLocation = function(){
 			<input type="text" id="search" name="search" />
 			<input type="submit" class="button find"  value="Find Address"/>
 			</form>
+			<div class="button clear" onclick="clearLocation(); return false;">
+				Reset
+			</div>
 			<div class="button mail" onclick="mailPosition(); return false;">
 				Mail Location
 			</div>
@@ -479,5 +495,23 @@ gotoLastLocation = function(){
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.touch.js"></script>
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.wheel.js"></script>
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.dblclick.js"></script>
+		<script type="text/javascript">
+			// <![CDATA[
+
+if (window.navigator.standalone) {
+	document.getElementById("meta").className += 'standalone';
+}
+
+/* update manifest */
+if (navigator.onLine) {
+	cache = window.applicationCache;
+	cache.addEventListener('updateready',
+		function() {
+			cache.swapCache();
+			alert('touchmaplite has been successfully updated, changes will take effect next time touchmaplite starts.');
+		}
+	);
+}
+</script>
 	</body>
 </html>
