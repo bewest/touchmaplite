@@ -259,8 +259,10 @@ p {
 
 </style>
 		
-		<script type="text/javascript">
+<script type="text/javascript">
 			// <![CDATA[
+/* search ajax */
+
 var req;
 
 submitSearch = function() {
@@ -332,6 +334,8 @@ EventUtils.addEventListener(window, 'load', function(){
 	touchMap.tileSources['custom'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':customTileSource};
 	touchMap.map = 'custom';
 	touchMap.init();
+	gotoLastLocation();
+	setInterval(storeLocation,1000)
 }, false);
 
 
@@ -368,6 +372,42 @@ mailPosition = function(e){
 			zl = touchMap.viewerBean.zoomLevel;
 			window.location.href = "mailto:?body=%0A"+window.location.href.split('?' )[0]+"?latlonzoom="+pos.y+","+pos.x+","+zl
 		}
+		
+/* store curreny coords in HTML5 localStorage */
+		
+storeLocation = function(){
+	try {
+		pos = touchMap.currentLonLat(touchMap.viewerBean);
+		zl = touchMap.viewerBean.zoomLevel;
+		localStorage.setItem("lon", parseFloat(pos.x));
+		localStorage.setItem("lat", parseFloat(pos.y));
+		console.log(pos.x);
+		localStorage.setItem("zoom", parseInt(zl));
+	} catch (e) {
+		if (e == QUOTA_EXCEEDED_ERR) {
+			alert('Quota exceeded.');
+		}
+	}
+}
+
+gotoLastLocation = function(){
+
+	try {
+		lon = parseFloat(localStorage.getItem("lon"));
+		lat = parseFloat(localStorage.getItem("lat"));
+		zoom = parseInt(localStorage.getItem("zoom"));
+		touchMap.viewerBean.initialPan = { 'x' : touchMap.lon2pan(lon), 'y' : touchMap.lat2pan(lat)};
+		touchMap.viewerBean.zoomLevel = zoom; 
+		touchMap.viewerBean.clear();
+		touchMap.viewerBean.init();
+		touchMap.viewerBean.notifyViewerMoved({x:touchMap.viewerBean.x, y:touchMap.viewerBean.y});
+		touchMap.viewerBean.notifyViewerZoomed();
+
+	} catch (e) {
+	
+	}
+}
+
 
 // ]]>
 		</script>
