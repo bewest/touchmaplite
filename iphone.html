@@ -6,8 +6,8 @@
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-		<link rel="apple-touch-icon" href="images/osm_logo.png"/>
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<link rel="apple-touch-icon-precomposed" href="images/osm_logo.png"/>
 		<title>touchMapLite | custom iphone example</title>
 		<script type="text/javascript" src="js/PanoJS/EventUtils.js"></script>
 		<script type="text/javascript" src="js/PanoJS/PanoJS.js"></script>
@@ -131,7 +131,7 @@ body.witheffects #viewer {
 	margin:0;
 	padding: 5px;
 	z-index:2000;
-	opacity: 0.2;
+	opacity: 0.5;
 }
 
 
@@ -261,6 +261,19 @@ p {
 		
 <script type="text/javascript">
 			// <![CDATA[
+
+/* update manifest */
+        if (navigator.onLine) {
+            cache = window.applicationCache;
+            cache.addEventListener('updateready',
+            function() {
+                cache.swapCache();
+                alert('touchmaplite has been successfully updated, changes will take effect next time touchmaplite starts.');
+            }
+            );
+        }
+
+
 /* search ajax */
 
 var req;
