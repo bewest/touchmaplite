@@ -9,153 +9,253 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		<link rel="apple-touch-icon" href="images/osm_logo.png"/>
 		<title>touchMapLite | custom iphone example</title>
-		<link rel="stylesheet" type="text/css" href="css/viewer.css" />
-		<link rel="stylesheet" type="text/css" href="css/simple.css" />
 		<script type="text/javascript" src="js/PanoJS/EventUtils.js"></script>
 		<script type="text/javascript" src="js/PanoJS/PanoJS.js"></script>
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.js"></script>
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.geolocation.js"></script>
 		
-<style>
+		<style>
+html,body,div,h1,h2,h3,h4,h5,h6,ul,ol,dl,li,dt,dd,p,blockquote,pre,form,fieldset,table,th,td {
+margin:0;
+padding:0;
+}
 
-html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote,
-pre, form, fieldset, table, th, td { margin: 0; padding: 0; }
 
-/*****Basic Elements*****/
 body {
-	font-family: Helvetica, sans-serif;
-	text-align: center;
-	-webkit-text-size-adjust: none;
-	-webkit-user-select: none;
-}
-p {
-	color: #000;
-	font-size: 14px;
-	text-align: left;
-	margin: 0 0 1em;
-}
-a {
-	color: #000;
-	font-weight: bold;
+	background:#ddd;
+	color:#fff;
+	font-family:Helvetica, sans-serif;
+	font-size:0.7em;
+	width: 100%;
+	height: 100%;
+	overflow:hidden;
+	-webkit-text-size-adjust:none;
+	-webkit-user-select:none;
 }
 
 
-#container {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	-webkit-perspective: 780;
-}
 
 #card {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 100;
-	background-color: transparent;
-	-webkit-transform-style: preserve-3d;
-	-webkit-transition-property: -webkit-transform;
-	-webkit-transition-timing-function: ease-in-out;
-	-webkit-transition-duration: 0.7s;
+	position:absolute;
+	bottom:0;
+	left:0;
+	right:0;
+	top:0;
 }
 
-#viewer, #meta {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+body.witheffects #card{
+	-webkit-transform-style:preserve-3d;
+	-webkit-transition-duration:0.7s;
+	-webkit-transition-property:0;
+	-webkit-transition-timing-function:ease-in-out;
+}
 
+#container {
+	position:absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+	background: #dddddd 
+}
+
+body.witheffects #container {
+	-webkit-perspective:780;
 }
 
 #viewer {
-	z-index: 160;
+	background: #dddddd url(images/loading.gif) center no-repeat;
+	width: 100%;
+	height: 100%;
+	position: relative;
 	z-index: 100;
-	-webkit-backface-visibility: hidden;
+	top: 0;
+	left: 0;
 }
 
-#meta {
-	position: absolute;
-	top: 20px;
-	bottom: 20px;
-	right: 20px;
-	left: 20px;
-	padding: 120px 20px 0px;
-	color: #000;
-	border: 1px solid #aaa;
-	-webkit-border-radius: 10px;
-	-webkit-transition-property: opacity;
-	-webkit-transition-duration: 0.4s;
-	z-index: 150;
-	-webkit-transform: rotateY(-180deg);
-	-webkit-backface-visibility: hidden;
-	background: #eee;
+body.witheffects #viewer {
+	-webkit-backface-visibility:hidden;
 }
 
-.flipped {
-	-webkit-transform: rotateY(-180deg);
-}
-
-.button {
-	font-size: 17px;
-	color: #000;
-	height: 43px;
-	line-height: 43px;
-	margin-top: 30px;
-	-webkit-border-radius: 7px;
-	background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#bbb));
-	border: 1px solid #aaa;
-	text-align: center;
-	-webkit-user-select: none;
-	left: 15px;
-	right: 15px;
-	white-space: nowrap;
-	padding: 0px 20px;
-}
-
-.button.close {
-	position: absolute;
-	bottom: 15px;
-	right: auto;
-}
-
-
-.button.mail {
-	position: absolute;
-	bottom: 15px;
-	left: auto;
-	right: 15px;
-
-}
-
-.button.find {
-	position: absolute;
-	padding:0;
-	top: 35px;
-}
-
-#search {
-	position: absolute;
-	top: 15px;
-	left: 15px;
-	right: 15px;
-	height: 33px;
-	font-size: 17px;
-	border: 2px solid #aaa;
-	padding: 0px 5px;
+#viewer * {
+	-webkit-user-select:ignore;
 }
 
 #viewer .controls {
-	margin: 0;
-	position: absolute;
-	right: 1em;
-	top: 2em;
-	-webkit-user-select: none;
+	position:absolute;
+	right:15px;
+	top:15px;
+	z-index:2000;
+	-webkit-user-select:none;
 }
+
+#viewer .controls span {
+	background-image:url(images/buttons.png);
+	border:none;
+	display:block;
+	height:36px;
+	width:36px;
+	margin:0;
+	opacity:0.8;
+	padding:4px 2px 2px;
+	text-indent:-999em;
+	-webkit-border-radius:20px;
+
+}
+
+#viewer .controls span.findLocation {
+	background-position:0 -153px;
+}
+
+#viewer .controls span.info {
+	background-position:0 -203px;
+}
+
+#viewer .controls span.settings {
+	background-position:0 2px;
+}
+
+#viewer .controls span.zoomIn {
+	background-position:0 -102px;
+}
+
+#viewer .controls span.zoomOut {
+	background-position: 0px -50px;
+}
+
+
+#viewer .copyright {
+	position: absolute;
+	bottom:0;
+	left:0;
+	margin:0;
+	padding: 5px;
+	z-index:2000;
+	opacity: 0.2;
+}
+
+
+
+#viewer .well, #viewer .surface {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	/* FIXME: let's apply this in GSV.js */
+	/*cursor: grab;*/
+	cursor: -moz-grab;
+}
+#viewer .surface {
+	z-index: 20;
+}
+#viewer .well {
+	overflow: hidden;
+	z-index: 10;
+}
+#viewer .well .tile
+{
+	border: 0;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: block;
+}
+
+
+
+#meta {
+	background:#eee;
+	border:1px solid #aaa;
+	bottom:15px;
+	color:#000;
+	left:15px;
+	padding:120px 20px 0;
+	position:absolute;
+	right:15px;
+	top:15px;
+	z-index:150;
+	-webkit-border-radius:10px;
+	display: none;
+}
+
+body.witheffects #meta {
+	display: block;
+	-webkit-backface-visibility:hidden;
+	-webkit-transform:rotateY(-180deg);
+	-webkit-transition-duration:0.4s;
+	-webkit-transition-property:opacity;
+
+}
+
+.button {
+	background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#bbb));
+	border:1px solid #aaa;
+	color:#000;
+	font-size:17px;
+	height:43px;
+	left:15px;
+	line-height:43px;
+	margin-top:30px;
+	padding:0 20px;
+	right:15px;
+	text-align:center;
+	white-space:nowrap;
+	-webkit-border-radius:7px;
+	-webkit-user-select:none;
+}
+
+.button.close {
+	bottom:15px;
+	position:absolute;
+	right:auto;
+}
+
+.button.find {
+	padding:0;
+	position:absolute;
+	top:35px;
+}
+
+.button.mail {
+	bottom:15px;
+	left:auto;
+	position:absolute;
+	right:15px;
+}
+
+.flipped {
+	-webkit-transform:rotateY(-180deg);
+}
+
+a {
+	color:#000;
+	font-weight:700;
+}
+
+p {
+	color:#000;
+	font-size:14px;
+	margin:0 0 1em;
+	text-align:left;
+}
+
+#search {
+	border:2px solid #aaa;
+	font-size:17px;
+	height:33px;
+	left:15px;
+	padding:0 5px;
+	position:absolute;
+	right:15px;
+	top:15px;
+}
+
+
 
 </style>
 		
@@ -208,10 +308,22 @@ processSearch = function() {
 
 var touchMap = null;
 var maximized = false;
+var fastLoad = true; // load balance - get tiles from muliple servers
 
 customTileSource = {
 	assembleUrl: function(xIndex, yIndex, zoom) {
-		return  'http://a.tile.openstreetmap.org/' + zoom + '/' + xIndex + '/' + yIndex + '.png';
+		if(fastLoad){
+			fastLoad = (fastLoad+1)%3+1; // cycles through 1 to 3
+			switch(fastLoad){
+				case 1: host = "a.tile.openstreetmap.org"; break;
+				case 2: host = "b.tile.openstreetmap.org"; break;
+				case 3: 
+				default:host = "c.tile.openstreetmap.org"; 
+			}
+			return  'http://' + host + '/' + zoom + '/' + xIndex + '/' + yIndex + '.png';
+		} else {
+			return  'http://a.tile.openstreetmap.org/' + zoom + '/' + xIndex + '/' + yIndex + '.png';
+		}
 	}
 }
 
@@ -221,6 +333,7 @@ EventUtils.addEventListener(window, 'load', function(){
 	touchMap.map = 'custom';
 	touchMap.init();
 }, false);
+
 
 EventUtils.addEventListener(window, 'resize', function(){
 	touchMap.reinitializeGraphic();
@@ -234,9 +347,21 @@ PanoJS.findLocationHandler = function(e) {
 };
 
 PanoJS.infoHandler = function(e) {
+	document.body.className = 'witheffects';
+	setTimeout(function(){
 	document.getElementById('card').className = 'flipped';
+	},100);
 	return false;
 };
+
+back = function(e) {
+	document.getElementById('card').className = '';
+	setTimeout(function(){
+		document.body.className = '';
+	},500);
+	return false;
+};
+
 
 mailPosition = function(e){
 			pos = touchMap.currentLonLat(touchMap.viewerBean);
@@ -260,7 +385,7 @@ mailPosition = function(e){
 				<span class="findLocation" title="Find Current Location">GPS</span>
 				<span class="info" title="Show Info">i</span>
 			</p>
-			<p class="copyright">touchMapLite, <span id='copyright'></span></p>
+			<p class="copyright"><span id='copyright'></span></p>
 		</div>
 		<div id="meta">
 			<p>
@@ -280,7 +405,7 @@ mailPosition = function(e){
 			<div class="button mail" onclick="mailPosition(); return false;">
 				Mail Location
 			</div>
-			<div class="button close" onclick="document.getElementById('card').className = ''">
+			<div class="button close" onclick="back();">
 				Back
 			</div>
 		</div>
