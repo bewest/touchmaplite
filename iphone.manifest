@@ -1,5 +1,5 @@
 CACHE MANIFEST
-
+# Cache manifest version 0.0.1
 images/blank.gif
 images/buttons.png
 images/loading.gif
@@ -12,6 +12,5 @@ js/touchMapLite/touchMapLite.event.wheel.js
 js/touchMapLite/touchMapLite.geolocation.js
 
 NETWORK:
-http://opentouchmap.org
-http://www.opentouchmap.org
-http://a.tile.openstreetmap.org
+http://opentouchmap.org/2/search.php
+http://www.opentouchmap.org/2/search.php
