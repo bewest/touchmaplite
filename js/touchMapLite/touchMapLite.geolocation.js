@@ -7,9 +7,12 @@ if(typeof(navigator.geolocation) != "undefined"){
 		return false;
 	};
 
-} else if(typeof window.gears != "undefined"){
+} else if(typeof google != "undefined"){
 // android
-	var geo = window.gears.factory.create('beta.geolocation');
+
+	try {window.gears = !!(typeof GearsFactory != 'undefined' || navigator.mimeTypes['application/x-googlegears'] || new ActiveXObject('Gears.Factory'));}catch(e){}
+
+	var geo = google.gears.factory.create('beta.geolocation');
 
 	touchMapLite.prototype.findLocationHandler = function(e) {
 		if(typeof(geo.geolocation) != "undefined" && findOnMap != null){
