@@ -273,11 +273,9 @@ body.witheffects #meta p{
 
 
 </style>
+		
 <script type="text/javascript">
-
-
-
-
+			// <![CDATA[
 
 /* search ajax */
 
@@ -360,7 +358,11 @@ EventUtils.addEventListener(window, 'resize', function(){
 }, false);
 
 
-
+PanoJS.findLocationHandler = function(e) {
+	findOnMap = touchMap;
+	touchMap.findLocationHandler();
+	return false;
+};
 
 PanoJS.infoHandler = function(e) {
 	document.body.className = 'witheffects';
@@ -387,7 +389,7 @@ mailPosition = function(e){
 		
 
 
-
+// ]]>
 		</script>
 	</head>
 	<body>
@@ -400,7 +402,7 @@ mailPosition = function(e){
 			<p class="controls">
 				<span class="zoomIn" title="Zoom In">+</span>
 				<span class="zoomOut" title="Zoom Out">-</span>
-				<span id="geolocation" class="findLocation" title="Find Current Location">GPS</span>
+				<span class="findLocation" title="Find Current Location">GPS</span>
 				<span class="info" title="Show Info">i</span>
 			</p>
 			<p class="copyright"><span id='copyright'></span></p>
@@ -434,64 +436,5 @@ mailPosition = function(e){
 		</div>
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.touch.js"></script>
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.dblclick.js"></script>
-		<script>
-	var findOnMap = null;
-	var watchId = false;
-	
-	try {window.gears = !!(typeof GearsFactory != 'undefined' || navigator.mimeTypes['application/x-googlegears'] || new ActiveXObject('Gears.Factory'));}catch(e){}
-	if (window.gears) {	
-		var geo = google.gears.factory.create('beta.geolocation');
-	
-	touchMapLite.prototype.findLocationHandler = function(e) {
-		if(typeof(geo.geolocation) != "undefined" && findOnMap != null){
-			 geo.geolocation.getCurrentPosition(this.recenterLonLat, this.nolocationFound);
-		} else {
-			alert('no geolocation service (gears)')
-		}
-		return false;
-	}
-
-touchMapLite.prototype.nolocationFound = function(error){
-	if(error.code!=0){
-		alert('cannot determin current location ['+error.code+']');
-	} else {
-		return false;
-	}
-}
-
-touchMapLite.prototype.recenterLonLat = function(position){
-    var wasZoomed=false;
-	lon = position.coords.longitude;
-	lat = position.coords.latitude;
-	findOnMap.viewerBean.initialPan = { 'x' : findOnMap.lon2pan(lon), 'y' : findOnMap.lat2pan(lat)};
-	if(!watchId && position.coords.accuracy){	
-		// needs a more sophisticated technique
-		zoomLevel = 18-Math.floor(Math.log(position.coords.accuracy));
-        if(zoomLevel!=findOnMap.viewerBean.zoomLevel) wasZoomed=true;
-		if(zoomLevel>findOnMap.viewerBean.zoomLevel) {
-            findOnMap.viewerBean.zoomLevel = zoomLevel; 
-        }
-	}
-	findOnMap.viewerBean.clear();
-	findOnMap.viewerBean.init();
-	findOnMap.viewerBean.notifyViewerMoved({x:findOnMap.viewerBean.x, y:findOnMap.viewerBean.y});
-	if(wasZoomed==true) findOnMap.viewerBean.notifyViewerZoomed();
-	if(typeof findOnMap.marker != 'undefined'){
-		var home = new findOnMap.marker('GPS',lat, lon,findOnMap,true);
-	}
-	return false;
-}
-
-PanoJS.findLocationHandler = function(e) {
-	findOnMap = touchMap;
-	touchMap.findLocationHandler();
-	return false;
-};
-
-
-} else {
-	document.getElementById('geolocation').style.display="none";
-}
-</script>
 	</body>
 </html>
