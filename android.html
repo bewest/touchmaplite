@@ -435,11 +435,13 @@ mailPosition = function(e){
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.touch.js"></script>
 		<script type="text/javascript" src="js/touchMapLite/touchMapLite.event.dblclick.js"></script>
 		<script>
-		if(typeof google != "undefined"){
 	var findOnMap = null;
 	var watchId = false;
-	var geo = google.gears.factory.create('beta.geolocation');
-
+	
+	try {window.gears = !!(typeof GearsFactory != 'undefined' || navigator.mimeTypes['application/x-googlegears'] || new ActiveXObject('Gears.Factory'));}catch(e){}
+	if (window.gears) {	
+		var geo = google.gears.factory.create('beta.geolocation');
+	
 	touchMapLite.prototype.findLocationHandler = function(e) {
 		if(typeof(geo.geolocation) != "undefined" && findOnMap != null){
 			 geo.geolocation.getCurrentPosition(this.recenterLonLat, this.nolocationFound);
