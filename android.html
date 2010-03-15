@@ -274,97 +274,10 @@ body.witheffects #meta p{
 
 </style>
 <script type="text/javascript">
-	var geo = google.gears.factory.create('beta.geolocation');
 
-	touchMapLite.prototype.findLocationHandler = function(e) {
-		if(typeof(geo.geolocation) != "undefined" && findOnMap != null){
-			 geo.geolocation.getCurrentPosition(this.recenterLonLat, this.nolocationFound);
-		} else {
-			alert('no geolocation service (gears)')
-		}
-		return false;
-	}
-
-touchMapLite.prototype.nolocationFound = function(error){
-	if(error.code!=0){
-		alert('cannot determin current location ['+error.code+']');
-	} else {
-		return false;
-	}
-}
-
-touchMapLite.prototype.recenterLonLat = function(position){
-    var wasZoomed=false;
-	lon = position.coords.longitude;
-	lat = position.coords.latitude;
-	findOnMap.viewerBean.initialPan = { 'x' : findOnMap.lon2pan(lon), 'y' : findOnMap.lat2pan(lat)};
-	if(!watchId && position.coords.accuracy){	
-		// needs a more sophisticated technique
-		zoomLevel = 18-Math.floor(Math.log(position.coords.accuracy));
-        if(zoomLevel!=findOnMap.viewerBean.zoomLevel) wasZoomed=true;
-		if(zoomLevel>findOnMap.viewerBean.zoomLevel) {
-            findOnMap.viewerBean.zoomLevel = zoomLevel; 
-        }
-	}
-	findOnMap.viewerBean.clear();
-	findOnMap.viewerBean.init();
-	findOnMap.viewerBean.notifyViewerMoved({x:findOnMap.viewerBean.x, y:findOnMap.viewerBean.y});
-	if(wasZoomed==true) findOnMap.viewerBean.notifyViewerZoomed();
-	if(typeof findOnMap.marker != 'undefined'){
-		var home = new findOnMap.marker('GPS',lat, lon,findOnMap,true);
-	}
-	return false;
-}
-
-findOnMap = null;
-watchId = false;
-
-/* search ajax */
-
-var req;
-
-submitSearch = function() {
-	req = new XMLHttpRequest();
-	req.onreadystatechange = processSearch;
-	var q = document.getElementById("search").value;
-	q = encodeURIComponent(q);
-	req.open('GET', 'http://www.opentouchmap.org/2/search.php?search='+q, true);
-	req.send();
-}
+alert(google.gears.factory);
 
 
-processSearch = function() {
-	if (req.readyState == 4 && req.status == 200 && req.responseText)  {
-		var json = eval('(' + req.responseText + ')');
-
-	            var posStr = "";
-            if(json.xls_Response.xls_GeocodeResponse.xls_GeocodeResponseList.xls_GeocodedAddress instanceof Array) {
-                    posStr = json.xls_Response.xls_GeocodeResponse.xls_GeocodeResponseList.xls_GeocodedAddress[0].gml_Point.gml_pos;
-            } else {
-                    posStr = json.xls_Response.xls_GeocodeResponse.xls_GeocodeResponseList.xls_GeocodedAddress.gml_Point.gml_pos;
-            }
-            
-            var pos = posStr.split(" ");
-            var lon= pos[0]*1;
-            var lat= pos[1]*1;
-            
-            document.getElementById('card').className = '';
-            
-            touchMap.viewerBean.initialPan = { 'x' : touchMap.lon2pan(lon), 'y' : touchMap.lat2pan(lat)};
-            
-            touchMap.viewerBean.zoomLevel = 13; 
-            touchMap.viewerBean.clear();
-            touchMap.viewerBean.init();
-            touchMap.viewerBean.notifyViewerMoved({x:touchMap.viewerBean.x, y:touchMap.viewerBean.y});
-            touchMap.viewerBean.notifyViewerZoomed();
-            if(typeof touchMap.marker != 'undefined'){
-                var home = new touchMap.marker('Search',lat, lon,touchMap,true);
-            }
-
-        }
-    
-    return false;
-};
 
 var touchMap = null;
 var maximized = false;
@@ -400,19 +313,7 @@ EventUtils.addEventListener(window, 'resize', function(){
 }, false);
 
 
-PanoJS.findLocationHandler = function(e) {
-	findOnMap = touchMap;
-	touchMap.findLocationHandler();
-	return false;
-};
 
-PanoJS.infoHandler = function(e) {
-	document.body.className = 'witheffects';
-	setTimeout(function(){
-	document.getElementById('card').className = 'flipped';
-	},100);
-	return false;
-};
 
 back = function(e) {
 	document.getElementById('card').className = '';
@@ -444,8 +345,6 @@ mailPosition = function(e){
 			<p class="controls">
 				<span class="zoomIn" title="Zoom In">+</span>
 				<span class="zoomOut" title="Zoom Out">-</span>
-				<span class="findLocation" title="Find Current Location">GPS</span>
-				<span class="info" title="Show Info">i</span>
 			</p>
 			<p class="copyright"><span id='copyright'></span></p>
 		</div>
