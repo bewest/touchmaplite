@@ -7,9 +7,9 @@ if(typeof(navigator.geolocation) != "undefined"){
 		return false;
 	};
 
-} else if(typeof google != "undefined" && typeof google.gears != "undefined"){
+} else if(typeof window.gears != "undefined"){
 // android
-	var geo = google.gears.factory.create('beta.geolocation');
+	var geo = window.gears.factory.create('beta.geolocation');
 
 	touchMapLite.prototype.findLocationHandler = function(e) {
 		if(typeof(geo.geolocation) != "undefined" && findOnMap != null){
