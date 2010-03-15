@@ -1,3 +1,5 @@
+try {window.gears = !!(typeof GearsFactory != 'undefined' || navigator.mimeTypes['application/x-googlegears'] || new ActiveXObject('Gears.Factory'));}catch(e){}
+
 if(typeof(navigator.geolocation) != "undefined"){
 
 	touchMapLite.prototype.findLocationHandler = function(e) {
@@ -7,18 +9,16 @@ if(typeof(navigator.geolocation) != "undefined"){
 		return false;
 	};
 
-} else if(typeof google != "undefined"){
+} else if(typeof window.gears != "undefined"){
 // android
 
-	try {window.gears = !!(typeof GearsFactory != 'undefined' || navigator.mimeTypes['application/x-googlegears'] || new ActiveXObject('Gears.Factory'));}catch(e){}
-
 	var geo = google.gears.factory.create('beta.geolocation');
-
+	
 	touchMapLite.prototype.findLocationHandler = function(e) {
-		if(typeof(geo.geolocation) != "undefined" && findOnMap != null){
-			 geo.geolocation.getCurrentPosition(this.recenterLonLat, this.nolocationFound);
+		if(typeof(geo) != "undefined" && findOnMap != null){
+			 geo.getCurrentPosition(this.recenterLonLat, this.nolocationFound);
 		} else {
-			alert('no geolocation service')
+			alert('no geolocation service (gears)')
 		}
 		return false;
 	}
@@ -33,14 +33,15 @@ if(typeof(navigator.geolocation) != "undefined"){
 				 this.nolocationFound();
 			 }
 		} else {
-			alert('no geolocation service')
+			alert('no geolocation service (backberry)')
 		}
 		return false;
 	}
 } else {
 // dummy
+
 	touchMapLite.prototype.findLocationHandler = function(e) {
-		alert('no geolocation service')
+		alert('no geolocation services found')
 		return false;
 	};
 
@@ -93,5 +94,5 @@ touchMapLite.prototype.recenterLonLat = function(position){
 	return false;
 }
 
-findOnMap = null;
-watchId = false;
+var findOnMap = null;
+var watchId = false;
