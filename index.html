@@ -34,10 +34,18 @@
 
 var touchMap = null;
 
+var lat = 0;
+var lon = 0;
+var zoom = 1;
+
 var maximized = false;
 
 EventUtils.addEventListener(window, 'load', function(){
 	touchMap = new touchMapLite("viewer");
+	touchMap.lon = lon;
+	touchMap.lat = lat;
+	touchMap.zoom = zoom;
+
 	touchMap.init();
 }, false);
 
@@ -75,7 +83,7 @@ PanoJS.findLocationHandler = function(e) {
 	</head>
 	<body>
 		<div id="viewer">
-			<div class="well"><!-- --></div>
+			<div class="well" id="well"><!-- --></div>
 			<div class="surface" id="touchArea"><!-- --></div>
 			<div class="marker" id="markers"></div> 
 			<p class="controls">
