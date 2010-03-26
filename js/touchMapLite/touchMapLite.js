@@ -33,7 +33,7 @@
 	if(typeof(touchMapLite.prototype.TileUrlProviderOSM) != 'undefined') {
 			this.tileSources['OSM'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://a.tile.openstreetmap.org','','png')};
 			this.tileSources['OSMcylce'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://a.andy.sandbox.cloudmade.com/tiles/cycle','','png')};
-			this.tileSources['OEPN'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://tile.špnvkarte.de/tilegen','','png')};
+			this.tileSources['OEPN'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://tile.Ã¶pnvkarte.de/tilegen','','png')};
 			this.tileSources['OSB'] =  {'copyright':'Data CC-By-SA by OpenStreetMap','provider':new this.TileUrlProviderOSM('http://www.openstreetbrowser.org/tiles/base','','png')};
 	}
 	// legal? http://code.google.com/p/gmaps-api-issues/issues/detail?id=1396

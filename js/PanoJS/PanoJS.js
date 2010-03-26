@@ -423,9 +423,6 @@ PanoJS.prototype = {
 				// seems to need this no matter what
 				tile.element.style.top = tile.posy + 'px';
 				tile.element.style.left = tile.posx + 'px';
-				
-				tile.element.style.height = this.tileSize + 'px';
-				tile.element.style.width = this.tileSize + 'px';
 			}
 		}
 
