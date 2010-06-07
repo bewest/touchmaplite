@@ -51,6 +51,7 @@
 		};
 
 		toggleWatchLocation = function(node) {
+			findOnMap = touchMap;
 			if(!touchMap.watchLocationHandler()){
 				node.setAttribute("toggled", node.getAttribute("toggled") != "true")
 			}
