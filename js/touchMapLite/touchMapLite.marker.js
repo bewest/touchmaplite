@@ -99,11 +99,12 @@ touchMapLite.prototype.marker.prototype = {
 		circle.style.left = -(radius+3)+"px";
 		var ctx = circle.getContext("2d");
 		ctx.beginPath();
-		ctx.fillStyle = 'rgba(255,0,0,0.4)';  
-		ctx.strokeStyle = 'rgba(255,0,0,0.8)';
+		ctx.fillStyle = 'rgba(255,0,0,0.1)';  
+		ctx.strokeStyle = 'rgba(255,0,0,0.4)';
 		ctx.lineWidth = 3;
 		ctx.arc((radius+3), (radius+3), radius, 0, Math.PI*2, true);
 		ctx.closePath();
+		ctx.fill();
 		ctx.stroke();
 		this.element.appendChild(circle);
 		var image = document.createElement("img");
@@ -111,6 +112,13 @@ touchMapLite.prototype.marker.prototype = {
 		this.element.appendChild(image)
 		document.getElementById('markers').appendChild(this.element);
 		this.element.marker = this;
+		this.element.onclick = function(event){
+			accuracy = document.getElementById("accuracy");
+			if(accuracy){
+				accuracy.style.display="none";
+			};
+		}
+		setTimeout('document.getElementById("accuracy").style.display="none";',1000);
 	},	
 	createDOMelement: function(){
 		this.element = document.createElement("div");
