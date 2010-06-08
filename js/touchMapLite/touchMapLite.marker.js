@@ -29,7 +29,7 @@ touchMapLite.prototype.getMarkersFormUrlParams = function(){
 }
 		
 
-touchMapLite.prototype.marker = function(title, lat, lon, map, live) {
+touchMapLite.prototype.marker = function(title, lat, lon, map, live, radius) {
 	if(live){
 		this.id = 0;
 		found = false;
@@ -55,6 +55,7 @@ touchMapLite.prototype.marker = function(title, lat, lon, map, live) {
 	this.lat = lat;
 	this.x = 0;
 	this.y = 0;	
+	this.radius = radius;
 	this.initialized = false;
 	this.map = map;
 	this.viewer = map.viewerBean;
@@ -64,8 +65,11 @@ touchMapLite.prototype.marker = function(title, lat, lon, map, live) {
 	this.title = title;
 	this.isVisible = false;
 	this.markerSrc = "images/markers/lightblue"+map.MARKERS.length+".png";
-	
-	this.createDOMelement();
+	if(title != "GPS"){
+		this.createDOMelement();
+	} else {
+		this.createGPSelement(radius);	
+	}
 	this.placeMarker();
 	this.updateMarker(this.viewer);
 
@@ -79,6 +83,35 @@ touchMapLite.prototype.marker.prototype = {
 		this.y = Math.floor(this.map.lat2pan(this.lat)*fullSize);
 
 	},
+	createGPSelement: function(accuracy){
+	    radius = Math.floor((accuracy/metersPerPixel[this.viewer.zoomLevel])/2);
+		this.element = document.createElement("div");
+		this.element.setAttribute("class","marker");
+		if(accuracy = document.getElementById("accuracy")){
+			this.element.removeChild(accuracy);
+		}
+		var circle = document.createElement('CANVAS');
+		circle.setAttribute("id","accuracy");
+		circle.setAttribute("width",(radius+3)*2);
+		circle.setAttribute("height",(radius+3)*2);
+		circle.style.position = "absolute";
+		circle.style.top = -(radius+3)+"px";
+		circle.style.left = -(radius+3)+"px";
+		var ctx = circle.getContext("2d");
+		ctx.beginPath();
+		ctx.fillStyle = 'rgba(255,0,0,0.4)';  
+		ctx.strokeStyle = 'rgba(255,0,0,0.8)';
+		ctx.lineWidth = 3;
+		ctx.arc((radius+3), (radius+3), radius, 0, Math.PI*2, true);
+		ctx.closePath();
+		ctx.stroke();
+		this.element.appendChild(circle);
+		var image = document.createElement("img");
+		image.src=this.markerSrc;
+		this.element.appendChild(image)
+		document.getElementById('markers').appendChild(this.element);
+		this.element.marker = this;
+	},	
 	createDOMelement: function(){
 		this.element = document.createElement("div");
 		this.element.setAttribute("class","marker");
@@ -103,6 +136,7 @@ touchMapLite.prototype.marker.prototype = {
 		}
 	},
 	updateMarker: function(e){	
+	if(this.element){
 		top = (e.y+this.y);
 		left = (e.x+this.x);
 		if(top>=0 && top<this.viewer.height && left>=0 && left<this.viewer.width){
@@ -118,6 +152,7 @@ touchMapLite.prototype.marker.prototype = {
 				this.element.style.display = 'none';
 			}		
 		}
+	}
 	},
 
 	viewerMoved: function(e){
@@ -129,7 +164,12 @@ touchMapLite.prototype.marker.prototype = {
 		this.placeMarker();
 		this.updateMarker(e);
 		this.hideBubbles();
-
+		if(this.title == "GPS"){
+			accuracy = document.getElementById("accuracy");
+			if(accuracy){
+				accuracy.style.display="none";
+			};
+		}
 
 	},
 
