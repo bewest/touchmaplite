@@ -80,10 +80,6 @@ touchMapLite.prototype.recenterLonLat = function(position){
 	findOnMap.lon = lon;
 	findOnMap.lat = lat;
 	
-	fullSize = findOnMap.viewerBean.tileSize * Math.pow(2, findOnMap.viewerBean.zoomLevel);
-	x = Math.floor(findOnMap.lon2pan(lon)*fullSize);
-	y = Math.floor(findOnMap.lat2pan(lat)*fullSize);
-	findOnMap.viewerBean.recenter({'x':x, 'y':y}, true);
 	if(!watchId && position.coords.accuracy){	
 		for(zoomLevel=0; zoomLevel<17 && metersPerPixel[zoomLevel]*256>position.coords.accuracy; zoomLevel++){}
 		if(zoomLevel!=findOnMap.viewerBean.zoomLevel) wasZoomed=true;
@@ -95,6 +91,10 @@ touchMapLite.prototype.recenterLonLat = function(position){
 	if(typeof findOnMap.marker != 'undefined'){
 		var home = new findOnMap.marker('GPS',lat, lon,findOnMap,true, position.coords.accuracy);
 	}
+	fullSize = findOnMap.viewerBean.tileSize * Math.pow(2, findOnMap.viewerBean.zoomLevel);
+	x = Math.floor(findOnMap.lon2pan(lon)*fullSize);
+	y = Math.floor(findOnMap.lat2pan(lat)*fullSize);
+	findOnMap.viewerBean.recenter({'x':x, 'y':y}, true);
 	return false;
 }
 
