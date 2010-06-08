@@ -38,6 +38,7 @@
 		EventUtils.addEventListener(window, 'load', function(){
 			touchMap = new touchMapLite("viewer");
 			touchMap.init();
+			findOnMap = touchMap;
 		}, false);
 		
 		EventUtils.addEventListener(window, 'resize', function(){
@@ -51,7 +52,6 @@
 		};
 
 		toggleWatchLocation = function(node) {
-			findOnMap = touchMap;
 			if(!touchMap.watchLocationHandler()){
 				node.setAttribute("toggled", node.getAttribute("toggled") != "true")
 			}
