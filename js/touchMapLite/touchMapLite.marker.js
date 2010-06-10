@@ -99,10 +99,10 @@ touchMapLite.prototype.marker.prototype = {
 		circle.style.left = -(radius+3)+"px";
 		var ctx = circle.getContext("2d");
 		ctx.beginPath();
-		ctx.fillStyle = 'rgba(255,0,0,0.1)';  
-		ctx.strokeStyle = 'rgba(255,0,0,0.4)';
-		ctx.lineWidth = 3;
-		ctx.arc((radius+3), (radius+3), radius, 0, Math.PI*2, true);
+		ctx.fillStyle = 'rgba(4,90,252,0.1)';
+		ctx.strokeStyle = 'rgba(4,90,252,0.8)';
+		ctx.lineWidth = 1;
+		ctx.arc((radius+1), (radius+1), radius, 0, Math.PI*2, true);
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
@@ -118,7 +118,7 @@ touchMapLite.prototype.marker.prototype = {
 				accuracy.style.display="none";
 			};
 		}
-		setTimeout('document.getElementById("accuracy").style.display="none";',1000);
+		setTimeout('document.getElementById("accuracy").style.display="none";',1500);
 	},	
 	createDOMelement: function(){
 		this.element = document.createElement("div");
